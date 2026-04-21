@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>busconnect</title>
+    <link rel="icon" title="image" href="img/bus.png"/>
+    <link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/home.css"/>
+</head>
+<body>
+   
+    
+    <!--this is home page html-->
+  <header>
+    
+    <nav>
+    <div class="nav-pills">
+        <div id="page-home" class="page"></div>
+             <button class="nav-pill" onclick="showPage('home')" data-page="home">home</button>
+        
+<div id="page-about" class="page"></div>
+             <button class="nav-pill" onclick="showPage('about')" data-page="about">about</button>
+        <div id="page-contact" class="page"></div>
+        <button class="nav-pill" onclick="showPage('contact')" data-page="contact">contact</button>
+        <div class="page"></div><a href="chauffeur.html"><!---->
+         <button class="nav-pill" onclick="showPage('signin')" data-page="signin">signin</button>
+        </a>
+       
+
+    </div>
+    </nav>
+    <br/>
+  </header>
+    <div class="wavy2"></div>
+    <section><!--ive put it into section so i can split it or else that background will cover the whole page -->
+<div class="hero">
+    <div id="page-home" class="page active">
+     <div class="hero-tag">&#128680 veilig schoolvervoer </div><br/><!--you have to put your tag here or else it wont show 
+     and will be behind everything else -->
+      <h1> vind de <span> perfecte</span><br/>
+        schoolbuschaffeur voor uw kind</h1>
+     <p> bekijk beschikbare chauffeurs in uw buurt, vergelijk routes en boek met vertrouwen</p>
+     <div class="circle"><img src="img/buslogo.png"/></div><br/><!--ive put everything before this image because it doenst cooperate with the other element
+     best you leave it right where it is -->
+    
+    
+    </div><br/>
+    </section>
+<hr/>
+<!--this is the filter section-->
+
+    <div  class="container" id="zoek">
+        <div class="filter-bar">
+            <h3> filter op uw wensen</h3>
+            <div class="filter-grid">
+                <div class="field">
+                    <label> zoek op naam/route </label>
+                    <input type="text" id="f-search" oninput="filterDrivers()">
+
+            </div>
+            <div class="field">
+                <label for="category">onderwijsniveau</label>
+                <select id="category" onchange="updateOptions()">
+                <!--als je wilt dat het niet telkens verander haal die stuk vanaf onchange tot() weg-->
+            <option value="">--select--</option><!-- hier moeten alle school nivuea zodat je bij scholen de juiste schoolniveau krijgt-->
+                <option value="GLO" > GLO </option>
+             <option value="VOJ"> VOJ </option>
+                </select>
+
+            </div>
+            <div class="field"> 
+                <label for="items"> school</label>
+                <select id="f-school" class="items">
+                    <option value=""> --alle scholen--</option>
+                    <option value="" data-category="GLO">openbare scholen (O.S)</option><!--bij data-category plaats je bij welk value het behoord
+                    vb valye is daar GLO dus moet bij category="GLO" zijn-->
+                    <option value="" data-category="GLO">O.S Flora</option>
+                    <option data-category="GLO">O.S Welgelegen</option>
+                        <option data-category="GLO">O.S. Sophia's Lust.</option>
+
+                    </option>
+               
+                    <option value="" data-category="VOJ"> havo</option><!-- do dezelfde van GLO hier bij VOJ--> <!--bij het maken van meer opties copy paste je gewoon een optie die je al daar ziet
+                    en maak je veranderingen erin-->
+                    <option value="" data-category="VOJ">imeao</option>
+                </select>
+            </div>
+                <div class="field">
+<label for="wijk/route">wijk/route</label>
+<select id="f-route"> 
+    <option value="">--alle routen</option>
+    <option value=""> noord</option><!-- alle wijken hierin plaatsen-->
+</select>
+                </div>
+<div class="field"> 
+    <label for="beschikbaarheid">beschikbaarheid</label>
+<select id="f-dag">
+    <option value="">--alle dagen--</option>
+    <option value=""> maandag</option>
+    <option value=""> dinsdag</option>
+    <option value=""> woensdag</option>
+    <option value=""> donderdag</option>
+    <option value=""> vrijdag</option>
+</select>
+</div>
+<div class="field">
+    <label for="prijs">prijs</label>
+    <select id="f-prijs">
+        <option value="">--alle prijzen--</option>
+        <option value=""> </option> <!--prijsen hierin aangeven -->
+    </select>
+    </div>
+    
+    <button class="btn filter-btn" onclick="filterDrivers()"> filter<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></button>
+           
+<button class="btn btn-primary" onclick="resetFilters()">reset <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-corner-down-left-icon lucide-corner-down-left"><path d="M20 4v7a4 4 0 0 1-4 4H4"/><path d="m9 10-5 5 5 5"/></svg></button>
+        </div>
+        </div>
+        
+        <br/>
+        <center>
+        <div class="section-header"> 
+            <h2>beschikbare chauffeurs<span id="result-count"  class="count"></span></h2>
+        <p> klick op de kaart om meer details te zien en contact op nemen</p>
+        </div>
+        </center>
+        <div class="driver-grid" id="driver-grid">
+            <!--hier komen de chauffeurs kaarten te staan-->
+
+    </div>
+    <div class="empty-state" id="empty-state" style="display: none;">
+        <span class="emoji">❌</span>
+        <p> geen chauffeurs gevonden, probeer andere filters</p>
+    </div>
+    </div>
+        
+        </div>
+        <br/>
+
+<!---this is active page-about -->
+<div id="page-about" class="page-active"></div>
+
+
+<!---this is active page-contact -->
+
+    </div>
+     </div>
+</div>
+
+
+
+ <script src="js/click.js"></script>
+
+  
+</body>
+</html>
