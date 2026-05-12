@@ -7,7 +7,7 @@
     <link rel="icon" title="image" href="img/bus.png"/>
     <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="css/home.css">
-<link rel="stylesheet" href="css/chaufeur.css">
+<link rel="stylesheet" href="css/chaufeur.css"/>
 </head>
 <body>
   <header>
@@ -88,19 +88,19 @@
             <div class="form-grid">
               <div class="form-field">
                 <label>Voornaam</label>
-                <input type="text" id="r-voornaam" placeholder="Jan">
+                <input type="text" id="r-voornaam" placeholder="voornaam">
               </div>
               <div class="form-field">
                 <label>Achternaam</label>
-                <input type="text" id="r-achternaam" placeholder="de Vries">
+                <input type="text" id="r-achternaam" placeholder=" achternaam">
               </div>
               <div class="form-field">
                 <label>E-mailadres</label>
-                <input type="email" id="r-email" placeholder="jan@email.nl">
+                <input type="email" id="r-email" placeholder="name@gmail.com">
               </div>
               <div class="form-field">
                 <label>Telefoonnummer</label>
-                <input type="tel" id="r-telefoon" placeholder="06-12345678">
+                <input type="tel" id="r-telefoon" placeholder="+597 number">
               </div>
               <div class="form-field full">
                 <label>Korte introductie</label>
@@ -129,7 +129,7 @@
               </div>
               <div class="form-field">
                 <label>Ervaringsjaren</label>
-                <input type="number" id="r-ervaring" placeholder="5" min="0">
+                <input type="number" id="r-ervaring" placeholder="0" min="0">
               </div>
               <div class="form-field">
                 <label>Kenteken</label>
@@ -158,18 +158,17 @@
                   <option>Zuid</option>
                   <option>Oost</option>
                   <option>West</option>
-                  <option>Centrum</option>
+                  
                 </select>
               </div>
               <div class="form-field"><!--hier moeten de school namen -->
                 <label>Aangesloten school</label>
                 <select id="r-school">
-                  <option>Basisschool De Zonnewijzer</option>
-                  <option>OBS Het Kompas</option>
-                  <option>CBS De Regenboog</option>
-                  <option>Basisschool St. Jozef</option>
-                  <option>IKC De Lenteboom</option>
-                  <option>Montessori Basisschool</option>
+                 <option value="" data-category="GLO">openbare scholen (O.S)</option><!--bij data-category plaats je bij welk value het behoord
+                    vb valye is daar GLO dus moet bij category="GLO" zijn-->
+                    <option value="" data-category="GLO">O.S Flora</option>
+                    <option data-category="GLO">O.S Welgelegen</option>
+                        <option data-category="GLO">O.S. Sophia's Lust.</option>
                 </select>
               </div>
               <div class="form-field">
