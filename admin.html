@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Beheer — BusConnect</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">🚌 Bus<span>Connect</span></a>
+      <ul class="nav__links">
+        <li><a href="index.html">Home</a></li>
+        <li style="color:var(--accent);font-size:0.8rem;">⚙️ Admin Paneel</li>
+        <li><a href="#" onclick="logout()" class="btn btn--outline btn--sm">Uitloggen</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="dashboard">
+    <!-- Admin Sidebar -->
+    <aside class="sidebar">
+      <nav class="sidebar__nav">
+        <p class="sidebar__label">Beheer</p>
+        <a class="sidebar__link active" onclick="showTab('overview',this)">
+          <span class="icon">📊</span> Overzicht
+        </a>
+        <a class="sidebar__link" onclick="showTab('drivers',this)">
+          <span class="icon">🚌</span> Chauffeurs
+        </a>
+        <a class="sidebar__link" onclick="showTab('users',this)">
+          <span class="icon">👪</span> Ouders
+        </a>
+        <a class="sidebar__link" onclick="showTab('routes',this)">
+          <span class="icon">🗺️</span> Routes
+        </a>
+        <a class="sidebar__link" onclick="showTab('tracker',this)">
+          <span class="icon">📍</span> Live Tracker
+        </a>
+        <p class="sidebar__label">Communicatie</p>
+        <a class="sidebar__link" onclick="showTab('notifications',this)">
+          <span class="icon">🔔</span> Meldingen sturen
+        </a>
+        <a class="sidebar__link" onclick="logout()">
+          <span class="icon">🚪</span> Uitloggen
+        </a>
+      </nav>
+    </aside>
+
+    <main class="dashboard__main">
+
+      <!-- ─── Overview ─── -->
+      <div id="tab-overview">
+        <div class="dashboard__header">
+          <h1>Admin Overzicht</h1>
+          <p>Beheer alle gebruikers, chauffeurs en routes in BusConnect.</p>
+        </div>
+
+        <div class="grid-4" style="margin-bottom:1.5rem;">
+          <div class="metric-card">
+            <p class="metric-card__label">Totale Chauffeurs</p>
+            <div class="metric-card__value">124</div>
+            <p class="metric-card__delta metric-card__delta--up">↑ +8 deze maand</p>
+          </div>
+          <div class="metric-card">
+            <p class="metric-card__label">Geregistreerde Ouders</p>
+            <div class="metric-card__value">853</div>
+            <p class="metric-card__delta metric-card__delta--up">↑ +42 deze maand</p>
+          </div>
+          <div class="metric-card">
+            <p class="metric-card__label">Actieve Routes</p>
+            <div class="metric-card__value">41</div>
+            <p class="metric-card__delta">Stabiel</p>
+          </div>
+          <div class="metric-card">
+            <p class="metric-card__label">Nieuwe Registraties</p>
+            <div class="metric-card__value">12</div>
+            <p class="metric-card__delta metric-card__delta--up">↑ Wacht op goedkeuring</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-header">
+            <h3>Recente Registraties — Goedkeuring vereist</h3>
+            <button class="btn btn--outline btn--sm" onclick="showTab('drivers',{currentTarget:document.querySelectorAll('.sidebar__link')[1]})">Beheer</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Chauffeur</th><th>E-mail</th><th>Route</th><th>Datum</th><th>Actie</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Carlos Apinsa</strong></td>
+                <td>carlos@email.com</td>
+                <td>Nickerie → Centrum</td>
+                <td>16 mei 2026</td>
+                <td>
+                  <button class="btn btn--primary btn--sm">✓ Activeer</button>
+                  <button class="btn btn--danger btn--sm">✕ Blokkeer</button>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Priya Ramkhelawan</strong></td>
+                <td>priya@email.com</td>
+                <td>Wanica → Paramaribo</td>
+                <td>15 mei 2026</td>
+                <td>
+                  <button class="btn btn--primary btn--sm">✓ Activeer</button>
+                  <button class="btn btn--danger btn--sm">✕ Blokkeer</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ─── Drivers ─── -->
+      <div id="tab-drivers" class="hidden">
+        <div class="dashboard__header">
+          <h1>Chauffeurs Beheren</h1>
+          <p>Voeg toe, bewerk, blokkeer of verwijder chauffeuraccounts. (CRUD)</p>
+        </div>
+        <div class="table-wrap">
+          <div class="table-header">
+            <h3>Alle Chauffeurs</h3>
+            <div style="display:flex;gap:0.5rem;">
+              <input type="text" placeholder="Zoek chauffeur…" style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:0.4rem 0.8rem;color:var(--text);font-size:0.85rem;outline:none;" />
+              <button class="btn btn--primary btn--sm">+ Toevoegen</button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>Naam</th><th>Route</th><th>District</th><th>Status</th><th>Acties</th></tr>
+            </thead>
+            <tbody id="adminDriverTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ─── Ouders ─── -->
+      <div id="tab-users" class="hidden">
+        <div class="dashboard__header">
+          <h1>Ouders / Gegevens</h1>
+          <p>Controleer en beheer de gegevens van ouders.</p>
+        </div>
+        <div class="table-wrap">
+          <div class="table-header"><h3>Alle Ouders</h3></div>
+          <table>
+            <thead>
+              <tr><th>Naam</th><th>E-mail</th><th>Aanvragen</th><th>Datum</th><th>Actie</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fatima Rashida</td>
+                <td>fatima@email.com</td>
+                <td>2</td>
+                <td>10 mei 2026</td>
+                <td><button class="btn btn--outline btn--sm">Bekijk</button></td>
+              </tr>
+              <tr>
+                <td>Marco de Vries</td>
+                <td>marco@email.com</td>
+                <td>1</td>
+                <td>8 mei 2026</td>
+                <td><button class="btn btn--outline btn--sm">Bekijk</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ─── Routes ─── -->
+      <div id="tab-routes" class="hidden">
+        <div class="dashboard__header">
+          <h1>Routes Beheren</h1>
+          <p>Voeg routes toe en beheer schoolbusritten.</p>
+        </div>
+        <div class="table-wrap">
+          <div class="table-header">
+            <h3>Actieve Routes</h3>
+            <button class="btn btn--primary btn--sm">+ Route Toevoegen</button>
+          </div>
+          <table>
+            <thead>
+              <tr><th>Route</th><th>Chauffeur</th><th>District</th><th>Ritten/dag</th><th>Actie</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Paramaribo → Lelydorp</td>
+                <td>Jan Doe</td>
+                <td>Para/Wanica</td>
+                <td>2</td>
+                <td><button class="btn btn--outline btn--sm">✏️ Bewerk</button></td>
+              </tr>
+              <tr>
+                <td>Nickerie → Centrum</td>
+                <td>Carlos Apinsa</td>
+                <td>Nickerie</td>
+                <td>2</td>
+                <td><button class="btn btn--outline btn--sm">✏️ Bewerk</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ─── Live Tracker Admin ─── -->
+      <div id="tab-tracker" class="hidden">
+        <div class="dashboard__header">
+          <h1>Live Tracker Monitor</h1>
+          <p>Bekijk de locaties van alle actieve bussen in real-time.</p>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+          <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <h3 style="font-size:1rem;font-weight:500;">Live Kaart — <span style="color:var(--success)">●</span> 8 bussen actief</h3>
+            <button class="btn btn--outline btn--sm">↻ Ververs</button>
+          </div>
+          <div style="height:400px;background:var(--bg);display:flex;align-items:center;justify-content:center;">
+            <div style="text-align:center;color:var(--muted);">
+              <div style="font-size:3rem;margin-bottom:0.75rem;">🗺️</div>
+              <p>Google Maps API integratie</p>
+              <p class="text-xs mt-1">Vereist MAPS_API_KEY in .env</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Meldingen ─── -->
+      <div id="tab-notifications" class="hidden">
+        <div class="dashboard__header">
+          <h1>Meldingen Sturen</h1>
+          <p>Stuur e-mails of meldingen naar chauffeurs en ouders.</p>
+        </div>
+        <div style="max-width:540px;">
+          <div class="info-card">
+            <p class="info-card__title">Bericht Sturen</p>
+            <div class="form-group">
+              <label>Aan</label>
+              <select>
+                <option>Alle chauffeurs</option>
+                <option>Alle ouders</option>
+                <option>Iedereen</option>
+                <option>Specifieke gebruiker</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Onderwerp</label>
+              <input type="text" placeholder="bv. Platformupdate — mei 2026" />
+            </div>
+            <div class="form-group">
+              <label>Bericht</label>
+              <textarea placeholder="Typ uw bericht hier…"></textarea>
+            </div>
+            <button class="btn btn--primary">📧 Verzenden</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="main.js"></script>
+  <script>
+    function showTab(name, el) {
+      document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden'));
+      document.getElementById('tab-'+name).classList.remove('hidden');
+      document.querySelectorAll('.sidebar__link').forEach(l => l.classList.remove('active'));
+      if (el && el.currentTarget) el.currentTarget.classList.add('active');
+      // Populate drivers table
+      if (name === 'drivers') renderAdminDrivers();
+    }
+
+    function renderAdminDrivers() {
+      const tbody = document.getElementById('adminDriverTable');
+      if (!window.DRIVERS) return;
+      tbody.innerHTML = window.DRIVERS.map(d => `
+        <tr>
+          <td><strong>${d.name}</strong></td>
+          <td>${d.route}</td>
+          <td>${d.location}</td>
+          <td><span class="badge badge--success">Actief</span></td>
+          <td>
+            <button class="btn btn--outline btn--sm">✏️</button>
+            <button class="btn btn--danger btn--sm">🚫</button>
+          </td>
+        </tr>`).join('');
+    }
+
+    function logout() {
+      localStorage.removeItem('bc_user');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>

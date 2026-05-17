@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registreren — BusConnect</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">🚌 Bus<span>Connect</span></a>
+      <ul class="nav__links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="chauffeurs.html">Chauffeurs</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="about.html">Over Ons</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="login.html" class="nav__cta">Inloggen</a></li>
+      </ul>
+      <button class="nav__hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="chauffeurs.html">Chauffeurs</a>
+    <a href="login.html" style="color:var(--accent)">Inloggen</a>
+  </div>
+
+  <main class="auth-page" style="min-height:100vh;padding-top:calc(var(--nav-h) + 2rem);">
+    <div style="width:100%;max-width:540px;">
+
+      <div class="auth-card">
+        <div class="auth-card__logo">🚌 Bus<span>Connect</span></div>
+        <p class="auth-card__tagline">Maak een chauffeursprofiel aan</p>
+
+        <div id="alertBox"></div>
+
+        <!-- Step indicator -->
+        <div style="display:flex;gap:0.5rem;margin-bottom:2rem;">
+          <div id="step1ind" style="flex:1;height:3px;background:var(--accent);border-radius:2px;transition:background 0.3s"></div>
+          <div id="step2ind" style="flex:1;height:3px;background:var(--border);border-radius:2px;transition:background 0.3s"></div>
+          <div id="step3ind" style="flex:1;height:3px;background:var(--border);border-radius:2px;transition:background 0.3s"></div>
+        </div>
+
+        <!-- Step 1: Personal info -->
+        <div id="step1">
+          <h3 style="font-size:1rem;margin-bottom:1.5rem;color:var(--text);">Stap 1 — Persoonlijke gegevens</h3>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Voornaam *</label>
+              <input type="text" id="firstName" placeholder="Jan" />
+            </div>
+            <div class="form-group">
+              <label>Achternaam *</label>
+              <input type="text" id="lastName" placeholder="Doe" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>E-mailadres *</label>
+            <input type="email" id="email" placeholder="jan.doe@email.com" />
+          </div>
+          <div class="form-group">
+            <label>Telefoonnummer *</label>
+            <input type="tel" id="phone" placeholder="+597 123 4567" />
+          </div>
+          <div class="form-group">
+            <label>Wachtwoord *</label>
+            <input type="password" id="password" placeholder="Minimaal 8 tekens" />
+            <p class="form-hint">Gebruik letters, cijfers en een speciaal teken.</p>
+          </div>
+          <button class="btn btn--primary w-full" onclick="goStep(2)">Volgende →</button>
+        </div>
+
+        <!-- Step 2: Driver info -->
+        <div id="step2" class="hidden">
+          <h3 style="font-size:1rem;margin-bottom:1.5rem;color:var(--text);">Stap 2 — Chauffeursinformatie</h3>
+          <div class="form-group">
+            <label>Route / Traject *</label>
+            <input type="text" id="route" placeholder="bv. Paramaribo → Lelydorp" />
+          </div>
+          <div class="form-group">
+            <label>District / Wijk *</label>
+            <input type="text" id="district" placeholder="bv. Paramaribo Centrum" />
+          </div>
+          <div class="form-group">
+            <label>Werkervaring</label>
+            <input type="text" id="experience" placeholder="bv. 5 jaar schoolbus ervaring" />
+          </div>
+          <div class="form-group">
+            <label>Rijbewijsnummer *</label>
+            <input type="text" id="license" placeholder="bv. SR-2019-12345" />
+          </div>
+          <div class="form-group">
+            <label>Beschikbaarheid</label>
+            <select id="availability">
+              <option value="maandag-vrijdag">Maandag t/m Vrijdag</option>
+              <option value="maandag-zaterdag">Maandag t/m Zaterdag</option>
+              <option value="flexibel">Flexibel</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:0.75rem;">
+            <button class="btn btn--outline" style="flex:1" onclick="goStep(1)">← Terug</button>
+            <button class="btn btn--primary" style="flex:2" onclick="goStep(3)">Volgende →</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Photo upload -->
+        <div id="step3" class="hidden">
+          <h3 style="font-size:1rem;margin-bottom:1.5rem;color:var(--text);">Stap 3 — Profielfoto (verplicht)</h3>
+          <div class="upload-area" id="uploadArea" onclick="document.getElementById('photoInput').click()">
+            <div class="upload-area__icon">📸</div>
+            <p class="upload-area__text">
+              <strong>Klik om een foto te uploaden</strong><br/>
+              JPG, PNG — maximaal 5MB
+            </p>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="previewPhoto(this)" />
+          <div id="photoPreview" style="display:none;margin-top:1rem;text-align:center;">
+            <img id="previewImg" style="width:100px;height:100px;object-fit:cover;border-radius:50%;border:3px solid var(--accent);margin:0 auto;" />
+            <p class="text-sm text-muted mt-1">Foto geselecteerd ✓</p>
+          </div>
+          <p class="form-hint mt-2">Een profielfoto is verplicht. Dit vergroot uw betrouwbaarheid bij ouders.</p>
+          <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+            <button class="btn btn--outline" style="flex:1" onclick="goStep(2)">← Terug</button>
+            <button class="btn btn--primary" style="flex:2" onclick="submitRegister()">✓ Registreer</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="auth-footer">Heeft u al een account? <a href="login.html">Inloggen →</a></p>
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+  <script>
+    function goStep(n) {
+      [1,2,3].forEach(i => {
+        document.getElementById('step'+i).classList.add('hidden');
+        document.getElementById('step'+i+'ind').style.background = i <= n ? 'var(--accent)' : 'var(--border)';
+      });
+      document.getElementById('step'+n).classList.remove('hidden');
+    }
+
+    function previewPhoto(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          document.getElementById('previewImg').src = e.target.result;
+          document.getElementById('photoPreview').style.display = 'block';
+          document.getElementById('uploadArea').style.borderColor = 'var(--accent)';
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function submitRegister() {
+      const firstName = document.getElementById('firstName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const photo = document.getElementById('photoInput').files[0];
+
+      if (!firstName || !email) {
+        showAlert('Vul alle verplichte velden in.', 'error');
+        goStep(1); return;
+      }
+      if (!photo) {
+        showAlert('Upload een profielfoto om te registreren.', 'error');
+        return;
+      }
+
+      // Send to backend
+      const formData = new FormData();
+      formData.append('firstName', firstName);
+      formData.append('lastName', document.getElementById('lastName').value);
+      formData.append('email', email);
+      formData.append('phone', document.getElementById('phone').value);
+      formData.append('password', document.getElementById('password').value);
+      formData.append('route', document.getElementById('route').value);
+      formData.append('district', document.getElementById('district').value);
+      formData.append('experience', document.getElementById('experience').value);
+      formData.append('license', document.getElementById('license').value);
+      formData.append('availability', document.getElementById('availability').value);
+      formData.append('photo', photo);
+
+      fetch('/api/register', { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            showAlert('Registratie gelukt! Check uw e-mail voor bevestiging.', 'success');
+            setTimeout(() => window.location.href = 'login.html', 2500);
+          } else {
+            showAlert(data.message || 'Er is iets misgegaan.', 'error');
+          }
+        })
+        .catch(() => {
+          // Demo mode (no backend running)
+          showAlert('Demo: Registratie gelukt! U wordt doorgestuurd naar de loginpagina.', 'success');
+          setTimeout(() => window.location.href = 'login.html', 2500);
+        });
+    }
+
+    function showAlert(msg, type) {
+      document.getElementById('alertBox').innerHTML =
+        `<div class="alert alert--${type === 'error' ? 'error' : 'success'}">${type === 'error' ? '⚠️' : '✅'} ${msg}</div>`;
+    }
+  </script>
+</body>
+</html>

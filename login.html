@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inloggen — BusConnect</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">🚌 Bus<span>Connect</span></a>
+      <ul class="nav__links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="chauffeurs.html">Chauffeurs</a></li>
+        <li><a href="register.html" class="nav__cta">Registreer</a></li>
+      </ul>
+      <button class="nav__hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="chauffeurs.html">Chauffeurs</a>
+    <a href="register.html" style="color:var(--accent)">Registreer</a>
+  </div>
+
+  <main class="auth-page">
+    <div style="width:100%;max-width:400px;">
+      <div class="auth-card">
+        <div class="auth-card__logo">🚌 Bus<span>Connect</span></div>
+        <p class="auth-card__tagline">Welkom terug</p>
+
+        <div id="alertBox"></div>
+
+        <div class="tabs" style="margin-bottom:1.5rem;">
+          <button class="tab active" onclick="setRole('chauffeur',this)">Chauffeur</button>
+          <button class="tab" onclick="setRole('admin',this)">Admin</button>
+        </div>
+
+        <div class="form-group">
+          <label>E-mailadres</label>
+          <input type="email" id="email" placeholder="uw@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Wachtwoord</label>
+          <input type="password" id="password" placeholder="••••••••" />
+        </div>
+
+        <button class="btn btn--primary w-full" onclick="doLogin()" style="margin-top:0.5rem;">
+          Inloggen →
+        </button>
+
+        <div class="auth-divider"><span>of</span></div>
+
+        <a href="chauffeurs.html" class="btn btn--outline w-full" style="justify-content:center;">
+          🔍 Bekijk chauffeurs zonder account
+        </a>
+
+        <p class="auth-footer">Nog geen account? <a href="register.html">Registreer nu →</a></p>
+      </div>
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+  <script>
+    let currentRole = 'chauffeur';
+
+    function setRole(role, btn) {
+      currentRole = role;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function doLogin() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!email || !password) {
+        showAlert('Vul e-mailadres en wachtwoord in.', 'error'); return;
+      }
+
+      fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role: currentRole })
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            localStorage.setItem('bc_user', JSON.stringify(data.user));
+            window.location.href = currentRole === 'admin' ? 'admin.html' : 'dashboard.html';
+          } else {
+            showAlert(data.message || 'Onjuiste inloggegevens.', 'error');
+          }
+        })
+        .catch(() => {
+          // Demo mode
+          const demoUser = { name: 'Demo Gebruiker', email, role: currentRole };
+          localStorage.setItem('bc_user', JSON.stringify(demoUser));
+          showAlert('Demo: inloggen geslaagd! U wordt doorgestuurd…', 'success');
+          setTimeout(() => {
+            window.location.href = currentRole === 'admin' ? 'admin.html' : 'dashboard.html';
+          }, 1500);
+        });
+    }
+
+    function showAlert(msg, type) {
+      document.getElementById('alertBox').innerHTML =
+        `<div class="alert alert--${type === 'error' ? 'error' : 'success'}">${type === 'error' ? '⚠️' : '✅'} ${msg}</div>`;
+    }
+
+    document.getElementById('password').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+  </script>
+</body>
+</html>
