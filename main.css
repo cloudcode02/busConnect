@@ -7,6 +7,18 @@
 :root{
 --green-light:#92b277;
 --yellow-light: #f8f9f4;
+--white: #ffffff;
+--ink: #1c2617;
+--ink-faint: #5c5b52;
+--ink-light: #8a887a;
+--ink-mid: #3d3b35;
+--border: #e5e2d9;
+--shadow: 0 2px 8px rgba(28,38,23,0.08);
+--shadow-lg: 0 8px 24px rgba(28,38,23,0.12);
+--amber: #d4a847;
+--amber-light: #f5ecd3;
+--amber-dark: #b8922f;
+--green: #5a7d45;
 }
 html{
     scroll-behavior: smooth;
@@ -46,3 +58,4 @@ h1, h2, h3, .display{
     }
 }
 /*this is how you want your page to apear when you click on it*/
+

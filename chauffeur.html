@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>chaffeur</title>
     <link rel="icon" title="image" href="img/bus.png"/>
-    <link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="css/home.css">
-<link rel="stylesheet" href="css/chaufeur.css">
+    <link rel="stylesheet" href="main.css">
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="chaufeur.css">
 </head>
 <body>
   <header>
@@ -15,19 +15,8 @@
     
     <nav>
     <div class="nav-pills">
-        <div id="page-home" class="page"></div><a href="index.html">
-             <button class="nav-pill" onclick="showPage('home')" data-page="home">home</button>
-             </a>
-        
-<div id="page-about" class="page"></div><!--set een link naar de ander page-->
-             <button class="nav-pill" onclick="showPage('about')" data-page="about">about</button>
-        <div id="page-contact" class="page"></div>
-        <button class="nav-pill" onclick="showPage('contact')" data-page="contact">contact</button>
-        <div id="page-signin" class="page"></div><a href="chauffeur.html">
-         <button class="nav-pill" onclick="showPage('signin')" data-page="signin">signin</button>
-        </a>
-       
-
+        <a class="nav-pill" href="index.html">home</a>
+        <button class="nav-pill" id="btn-mijn-profiel" onclick="openMyProfile()" style="display:none;">Mijn Profiel</button>
     </div>
     </nav>
     <br/>
@@ -102,6 +91,17 @@
                 <label>Telefoonnummer</label>
                 <input type="tel" id="r-telefoon" placeholder="06-12345678">
               </div>
+              <div class="form-field">
+                <label>Profielfoto</label>
+                <input type="file" id="r-foto" accept="image/png, image/jpeg" onchange="handlePhotoPreview(this)" required>
+                <small>Upload een profielfoto zodat ouders u gemakkelijk herkennen.</small>
+                <div class="photo-preview" id="photo-preview" style="margin-top:0.75rem;display:none;">
+                  <img src="" alt="Profielfoto preview" style="max-width:120px;border-radius:16px;border:1px solid #dcd7ce;" />
+                </div>
+              </div>
+              <div class="form-field full">
+                <label class="checkbox-label"><input type="checkbox" id="r-show-contact"> Contactinformatie zichtbaar voor ouders</label>
+              </div>
               <div class="form-field full">
                 <label>Korte introductie</label>
                 <textarea id="r-bio" rows="3" maxlength="250" placeholder="Vertel ouders iets over uzelf en uw ervaring…" oninput="updateCharCount()"></textarea>
@@ -135,7 +135,23 @@
                 <label>Kenteken</label>
                 <input type="text" id="r-kenteken" placeholder="AB-123-C">
               </div>
-              
+              <div class="form-field">
+                <label>Rijbewijs type</label>
+                <select id="r-rijbewijs-type">
+                  <option>B</option>
+                  <option>B+E</option>
+                  <option>C</option>
+                  <option>D</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Rijbewijsnummer</label>
+                <input type="text" id="r-rijbewijs-nr" placeholder="123456789">
+              </div>
+              <div class="form-field">
+                <label>Bouwjaar voertuig</label>
+                <input type="number" id="r-bouwjaar" placeholder="2018" min="1990" max="2035">
+              </div>
               <div class="form-field">
                 <label>Extra's</label>
                 <select id="r-extra">
@@ -246,6 +262,6 @@
   © 2026 BusConnect — Veilig schoolvervoer voor elk gezin 🚌
 </div>
 
-    
+<script src="click.js"></script>
 </body>
 </html>
