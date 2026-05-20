@@ -266,6 +266,74 @@ margin-left: 300px;
 .count{
     font-size:1rem;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-font-weight: 400;
-color:#1d1f1b;
+    font-weight: 400;
+    color:#1d1f1b;
+}
+
+@media (max-width: 1200px) {
+    nav {
+        padding: 0 1.25rem;
+    }
+
+    .hero {
+        padding: 4rem 1.5rem 3rem;
+    }
+
+    .hero h1 {
+        margin-left: 0;
+        font-size: clamp(2.5rem, 4vw, 3.5rem);
+        max-width: 100%;
+    }
+
+    .hero p {
+        margin-left: 0;
+        margin-top: 1.25rem;
+        max-width: 720px;
+        font-size: 1.2rem;
+        background-color: rgba(29, 31, 27, 0.1);
+        display: inline-block;
+        padding: 1rem 1.2rem;
+    }
+
+    .circle {
+        left: -20px;
+        right: auto;
+        top: 10px;
+        height: 300px;
+        width: 300px;
+    }
+
+    .filter-bar {
+        padding: 1.25rem;
+    }
+
+    .field input,
+    .field select {
+        width: 100%;
+    }
+
+    .filter-btn,
+    .btn-primary {
+        width: auto;
+    }
+
+    .container {
+        padding: 2.5rem 1.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .nav-pills {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .nav-pill {
+        font-size: 0.95rem;
+        padding: 0.5rem 0.9rem;
+    }
+
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
 }

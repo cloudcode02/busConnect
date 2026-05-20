@@ -1,3 +1,24 @@
+// Load drivers from localStorage on startup
+loadDrivers();
+
+// Fallback voor statische chauffeurslijst
+const drivers = [];
+
+// Toon "Mijn Profiel" knop als er geregistreerde chauffeurs zijn
+if (registeredDrivers.length > 0) {
+  const btn = document.getElementById('btn-mijn-profiel');
+  if (btn) btn.style.display = 'block';
+}
+
+function openMyProfile() {
+  if (registeredDrivers.length === 0) {
+    alert('U heeft nog geen profiel. Registreer eerst als chauffeur.');
+    return;
+  }
+  // Open het meest recente profiel
+  editMyProfile(registeredDrivers[registeredDrivers.length - 1].id);
+}
+
 // ── API BASE ──
 const API = 'http://localhost:3000/api';
 let allDrivers = [];
@@ -29,28 +50,26 @@ function updateOptions() {
 
   options.forEach(option => {
     const category = option.getAttribute("data-category");
-    if (!category) return;
-    option.style.display = (category === selectedCategory) ? "block" : "none";
+
+    if (!category) return; // keep "--Select--"
+
+    if (category === selectedCategory) {
+      option.style.display = "block";
+    } else {
+      option.style.display = "none";
+    }
   });
 }
-
-// ── FETCH DRIVERS ──
-async function loadDrivers() {
-  try {
-    const response = await fetch(API + '/chauffeurs');
-    allDrivers = await response.json();
-    filterDrivers();
-  } catch(err) {
-    console.error('Error loading drivers:', err);
-    allDrivers = [];
-  }
-}
-
+//this is for the website itself
 function renderDriverCard(d) {
+  const avatarContent = d.foto 
+    ? `<img src="${d.foto}" alt="${d.naam}">` 
+    : d.initials;
+  
   return `
     <div class="driver-card" onclick="openModal(${d.id})">
       <div class="driver-card-top">
-        <div class="driver-avatar">${getInitials(d.naam)}</div>
+        <div class="driver-avatar">${d.initials}</div>
         <div>
           <div class="driver-name">${d.naam}</div>
           <div class="driver-since">${d.erv || 0} jaar ervaring</div>
@@ -70,7 +89,7 @@ function renderDriverCard(d) {
           <div class="info-item"><label>Capaciteit</label><span>${d.capaciteit || 0} kinderen</span></div>
           <div class="info-item"><label>Beoordeling</label><span class="rating"><span class="stars">${stars(d.rating)}</span> ${(d.rating || 0).toFixed(1)} (${d.reviews || 0})</span></div>
         </div>
-        <div style="font-size:0.82rem;color:var(--ink-light);line-height:1.5;border-top:1px solid var(--border);padding-top:0.85rem;">"${(d.bio || 'Professionele chauffeur').substring(0,90)}…"</div>
+        <div style="font-size:0.82rem;color:var(--ink-light);line-height:1.5;border-top:1px solid var(--border);padding-top:0.85rem;">"${d.bio.substr(0,90)}${d.bio.length>90?'…':''}"</div>
       </div>
       <div class="driver-card-footer">
         <div class="price-display">€${d.prijs || 0} <small>/maand</small></div>
@@ -120,10 +139,14 @@ function openModal(id) {
   const d = allDrivers.find(x => x.id === id);
   if(!d) return;
 
+  const avatarContent = d.foto 
+    ? `<img src="${d.foto}" alt="${d.naam}">` 
+    : d.initials;
+
   document.getElementById('modal-title').textContent = d.naam;
   document.getElementById('modal-body').innerHTML = `
     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);">
-      <div class="driver-avatar" style="width:64px;height:64px;font-size:1.6rem;">${getInitials(d.naam)}</div>
+      <div class="driver-avatar" style="width:64px;height:64px;font-size:1.6rem;">${d.initials}</div>
       <div>
         <div class="rating"><span class="stars">${stars(d.rating)}</span> <strong>${(d.rating || 0).toFixed(1)}</strong> — ${d.reviews || 0} beoordelingen</div>
         <div class="badge-row" style="margin-top:0.5rem;">
@@ -134,13 +157,16 @@ function openModal(id) {
         <div style="font-size:0.85rem;color:var(--ink-light);margin-top:0.5rem;font-style:italic;">"${d.bio || 'Professioneel vervoer.'}"</div>
       </div>
     </div>
-    <div class="modal-detail-row"><span class="key">School</span><span class="val">${d.school || '-'}</span></div>
-    <div class="modal-detail-row"><span class="key">Route / wijk</span><span class="val">${d.route || '-'}</span></div>
-    <div class="modal-detail-row"><span class="key">Vertrektijd ochtend</span><span class="val">${d.tijdOch || '--:--'} uur</span></div>
-    <div class="modal-detail-row"><span class="key">Vertrektijd middag</span><span class="val">${d.tijdMid || '--:--'} uur</span></div>
-    <div class="modal-detail-row"><span class="key">Voertuig</span><span class="val">${d.voertuig || '-'} (${d.capaciteit || 0} plaatsen)</span></div>
-    <div class="modal-detail-row"><span class="key">Extra's</span><span class="val">${d.extra || 'Geen'}</span></div>
-    <div class="modal-detail-row"><span class="key">Tarief</span><span class="val" style="color:var(--amber-dark);font-size:1.1rem;">€${d.prijs || 0} / maand</span></div>
+    <div class="modal-detail-row"><span class="key">School</span><span class="val">${d.school}</span></div>
+    <div class="modal-detail-row"><span class="key">Route / wijk</span><span class="val">${d.route}</span></div>
+    <div class="modal-detail-row"><span class="key">Vertrektijd ochtend</span><span class="val">${d.tijdOch} uur</span></div>
+    <div class="modal-detail-row"><span class="key">Vertrektijd middag</span><span class="val">${d.tijdMid} uur</span></div>
+    <div class="modal-detail-row"><span class="key">Beschikbare dagen</span><span class="val">${d.dagen.join(' · ')}</span></div>
+    <div class="modal-detail-row"><span class="key">Voertuig</span><span class="val">${d.voertuig} (${d.cap} plaatsen)</span></div>
+  
+    <div class="modal-detail-row"><span class="key">Kenteken</span><span class="val">${d.kenteken}</span></div>
+    <div class="modal-detail-row"><span class="key">Extra's</span><span class="val">${d.extra}</span></div>
+    <div class="modal-detail-row"><span class="key">Tarief</span><span class="val" style="color:var(--amber-dark);font-size:1.1rem;">€${d.prijs} / maand</span></div>
   `;
   document.getElementById('modal-actions').innerHTML = `
     <button class="btn btn-amber" style="flex:1;" onclick="contactDriver(${d.id}, '${d.naam.replace(/'/g, "\\'")}')" >📩 Neem contact op</button>
@@ -176,16 +202,22 @@ function updateCharCount() {
   if(count) count.textContent = val;
 }
 
-// ── CHAUFFEUR REGISTRATION ──
-async function submitRegistration() {
-  const voornaam = document.getElementById('r-voornaam')?.value.trim() || '';
-  const achternaam = document.getElementById('r-achternaam')?.value.trim() || '';
-  const email = document.getElementById('r-email')?.value.trim() || '';
-  const password = document.getElementById('r-wachtwoord')?.value || '';
-  const akkoord = document.getElementById('r-akkoord')?.checked;
+// ── REGISTER ──
+const registeredDrivers = [];
+let nextId = 100;
+
+function submitRegistration() {
+  const voornaam = document.getElementById('r-voornaam').value.trim();
+  const achternaam = document.getElementById('r-achternaam').value.trim();
+  const email = document.getElementById('r-email').value.trim();
+  const akkoord = document.getElementById('r-akkoord').checked;
 
   if(!voornaam || !achternaam || !email || !password) {
     alert('Vul alle verplichte velden in.');
+    return;
+  }
+  if(!fotoFile) {
+    alert('Upload een profielfoto om verder te gaan.');
     return;
   }
   if(!akkoord) {
@@ -193,47 +225,46 @@ async function submitRegistration() {
     return;
   }
 
-  const registerData = {
-    voornaam: voornaam,
-    achternaam: achternaam,
-    email: email,
-    password: password,
-    telefoon: document.getElementById('r-telefoon')?.value || '',
-    bio: document.getElementById('r-bio')?.value || '',
-    voertuig: document.getElementById('r-voertuig')?.value || '',
-    capaciteit: parseInt(document.getElementById('r-capaciteit')?.value) || 8,
-    ervaring: parseInt(document.getElementById('r-ervaring')?.value) || 0,
-    kenteken: document.getElementById('r-kenteken')?.value || '',
-    extra: document.getElementById('r-extra')?.value || 'Geen',
-    route: document.getElementById('r-route')?.value || '',
-    school: document.getElementById('r-school')?.value || '',
-    tijdOch: document.getElementById('r-tijd-och')?.value || '07:30',
-    tijdMid: document.getElementById('r-tijd-mid')?.value || '14:45',
-    dagen: [...document.querySelectorAll('#days-grid .day-toggle.on')].map(el => el.textContent).join(','),
-    prijs: parseInt(document.getElementById('r-prijs')?.value) || 150
+  const dagen = [...document.querySelectorAll('#days-grid .day-toggle.on')].map(el => el.textContent);
+  const prijs = parseInt(document.getElementById('r-prijs').value) || 100;
+
+  const newDriver = {
+    id: nextId++,
+    naam: voornaam + ' ' + achternaam,
+    initials: (voornaam[0] + achternaam[0]).toUpperCase(),
+    erv: parseInt(document.getElementById('r-ervaring').value) || 1,
+    route: document.getElementById('r-route').value,
+    school: document.getElementById('r-school').value,
+    tijdOch: document.getElementById('r-tijd-och').value,
+    tijdMid: document.getElementById('r-tijd-mid').value,
+    dagen: dagen.length > 0 ? dagen : ['Ma','Di','Wo','Do','Vr'],
+    voertuig: document.getElementById('r-voertuig').value,
+    cap: parseInt(document.getElementById('r-capaciteit').value) || 8,
+    prijs: prijs,
+    rating: 5.0,
+    reviews: 0,
+    kenteken: document.getElementById('r-kenteken').value || 'N.v.t.',
+    extra: document.getElementById('r-extra').value,
+    bio: document.getElementById('r-bio').value || 'Nieuwe chauffeur op het platform.',
+    jaar: parseInt(document.getElementById('r-bouwjaar').value) || 2020,
   };
 
-  try {
-    const res = await fetch(API + '/auth/chauffeur/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(registerData)
-    });
+  registeredDrivers.push(newDriver);
 
-    const data = await res.json();
-    if (res.ok) {
-      document.getElementById('success-banner').style.display = 'block';
-      document.getElementById('register-form').style.display = 'none';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      alert('Fout: ' + (data.bericht || data.fout));
-    }
-  } catch(err) {
-    alert('Registratie fout: ' + err.message);
-  }
+  document.getElementById('success-banner').classList.add('show');
+  document.getElementById('register-form').style.opacity = '0.5';
+  document.getElementById('register-form').style.pointerEvents = 'none';
+
+  // Update stats
+  const count = drivers.length + registeredDrivers.length;
+  document.getElementById('stat-drivers').textContent = count;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 // ── INIT ──
-document.addEventListener('DOMContentLoaded', () => {
-  loadDrivers();
-});
+filterDrivers();
+

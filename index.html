@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>busconnect</title>
     <link rel="icon" title="image" href="buslogo.png"/>
+<<<<<<< HEAD
     <link rel="stylesheet" href="main.css">
 <link rel="stylesheet" href="home.css"/>
+=======
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="main.css"/>
+    <link rel="stylesheet" href="chaufeur.css"/>
+>>>>>>> eddec4eb15b5177084bc8265ba86f1224227012b
 </head>
 <body>
    
@@ -16,16 +22,10 @@
     
     <nav>
     <div class="nav-pills">
-        <div id="page-home" class="page"></div>
              <button class="nav-pill" onclick="showPage('home')" data-page="home">home</button>
-        
-<div id="page-about" class="page"></div>
              <button class="nav-pill" onclick="showPage('about')" data-page="about">about</button>
-        <div id="page-contact" class="page"></div>
         <button class="nav-pill" onclick="showPage('contact')" data-page="contact">contact</button>
-        <div class="page"></div><a href="chauffeur.html"><!---->
-         <button class="nav-pill" onclick="showPage('signin')" data-page="signin">signin</button>
-        </a>
+        <button class="nav-pill" onclick="showPage('signin')" data-page="signin">signin</button>
        
 
     </div>
@@ -34,9 +34,14 @@
   </header>
     <div class="wavy2"></div>
     <section><!--ive put it into section so i can split it or else that background will cover the whole page -->
+<<<<<<< HEAD
 <div class="hero">
     <!---this is active page-about -->
 <div id="page-about" class="page-active"></div>
+=======
+<div id="page-home" class="page active">
+  <div class="hero">
+>>>>>>> eddec4eb15b5177084bc8265ba86f1224227012b
      <div class="hero-tag">&#128680 veilig schoolvervoer </div><br/><!--you have to put your tag here or else it wont show 
      and will be behind everything else -->
       <h1> vind de <span> perfecte</span><br/>
@@ -44,10 +49,7 @@
      <p> bekijk beschikbare chauffeurs in uw buurt, vergelijk routes en boek met vertrouwen</p>
      <div class="circle"><img src="buslogo.png"/></div><br/><!--ive put everything before this image because it doenst cooperate with the other element
      best you leave it right where it is -->
-    
-    
-    </div><br/>
-    </section>
+  </div><br/>
 <hr/>
 <!--this is the filter section-->
 
@@ -135,23 +137,282 @@
         <p> geen chauffeurs gevonden, probeer andere filters</p>
     </div>
     </div>
+  </div>
+</div>
         
         </div>
         <br/>
+</section>
 
-<!---this is active page-about -->
-<div id="page-about" class="page-active"></div>
-
-
-<!---this is active page-contact -->
-
+<!---about page -->
+<div id="page-about" class="page" style="display:none; padding: 2rem 0;">
+  <div class="container">
+    <div class="section-header">
+      <h2>Over Bus Connect</h2>
+      <p>Bus Connect is een webapplicatie die ouders en schoolbuschauffeurs op een eenvoudige, veilige en overzichtelijke manier met elkaar verbindt.</p>
     </div>
-     </div>
+    <div class="content-block">
+      <p>Het platform is ontstaan vanuit het probleem dat veel ouders moeite hebben met het vinden van betrouwbare schoolbusdiensten en vaak afhankelijk zijn van sociale media of mond-tot-mondreclame.</p>
+      <p>Met Bus Connect krijgen chauffeurs de mogelijkheid om hun diensten professioneel aan te bieden door informatie zoals routes, werkervaring, beschikbaarheid en contactgegevens te delen. Ouders kunnen via het platform eenvoudig beschikbare chauffeurs bekijken, vergelijken en contact opnemen met een chauffeur die aansluit bij hun wensen.</p>
+      <p>Het doel van Bus Connect is om schooltransport toegankelijker, transparanter en gebruiksvriendelijker te maken voor zowel ouders als chauffeurs in Suriname.</p>
+    </div>
+  </div>
+</div>
+
+<!---contact page -->
+<div id="page-contact" class="page" style="display:none; padding: 2rem 0;">
+  <div class="container">
+    <div class="section-header">
+      <h2>Contact</h2>
+      <p>Heeft u vragen, opmerkingen of behoefte aan meer informatie over Bus Connect? Neem gerust contact met ons op. Wij staan klaar om u zo goed mogelijk te helpen.</p>
+    </div>
+    <div class="contact-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+      <div class="contact-info" style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:var(--shadow);">
+        <p>Heeft u vragen, opmerkingen of behoefte aan meer informatie over Bus Connect? Neem gerust contact met ons op. Wij staan klaar om u zo goed mogelijk te helpen.</p>
+        <p>📧 E-mail: <a href="mailto:info@busconnect.sr">info@busconnect.sr</a></p>
+        <p>📞 Telefoon: +597 000-0000</p>
+        <p>📍 Locatie: Paramaribo, Suriname</p>
+        <p>Of vul het contactformulier in en wij nemen zo spoedig mogelijk contact met u op.</p>
+      </div>
+      <div class="contact-form-card" style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:var(--shadow);">
+        <form id="contact-form" onsubmit="submitContactForm(event)">
+          <div class="form-grid" style="grid-template-columns:1fr;gap:1rem;">
+            <div class="form-field">
+              <label>Naam</label>
+              <input type="text" id="contact-name" placeholder="Uw naam">
+            </div>
+            <div class="form-field">
+              <label>E-mail</label>
+              <input type="email" id="contact-email" placeholder="naam@email.nl">
+            </div>
+            <div class="form-field">
+              <label>Telefoonnummer</label>
+              <input type="tel" id="contact-phone" placeholder="06-12345678">
+            </div>
+            <div class="form-field">
+              <label>Vraag</label>
+              <textarea id="contact-message" rows="4" placeholder="Wat wilt u weten?"></textarea>
+            </div>
+            <button class="btn btn-amber btn-full" type="submit">Verstuur bericht</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 
 
 
+<<<<<<< HEAD
 <script src="click.js"></script>
+=======
+<div id="page-signin" class="page" style="display:none; padding: 2rem 0;">
+  <div class="hero">
+    <div class="hero-tag"> 🚌 word chauffeur</div>
+    <h1> word een <span>betrouwbare</span><br/>
+      schoolbuschaffeur bij Busconnect </h1>
+    <p> sluit je aan bij ons netwerk van professionele chauffeurs, krijg toegang tot meer klanten en groei met Busconnect</p>
+  </div>
+  <div class="container">
+    <div class="register-layout">
+      <div class="register-sidebar">
+        <div class="sidebar-card">
+          <h3>Hoe werkt het?</h3>
+          <p>In een paar stappen staat u online en kunnen ouders u vinden.</p>
+          <div class="sidebar-steps">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-text"><strong>Vul uw gegevens in</strong>Naam, ervaring en voertuig.</div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-text"><strong>Stel uw route in</strong>Kies de wijk, school en tijden.</div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-text"><strong>Bepaal uw tarief</strong>U bepaalt zelf wat u vraagt per maand.</div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-text"><strong>Online!</strong>Ouders kunnen u direct vinden en contact opnemen.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="success-banner" id="success-banner">
+          <div class="success-icon">✅</div>
+          <div class="success-text">
+            <h4>Registratie gelukt!</h4>
+            <p>Uw profiel is aangemaakt en is nu zichtbaar voor ouders op het platform. Veel succes!</p>
+          </div>
+        </div>
+        <div class="form-card" id="register-form">
+          <div class="form-section">
+            <div class="form-section-title">👤 Persoonlijke gegevens <span>Verplicht</span></div>
+            <div class="form-grid">
+              <div class="form-field">
+                <label>Voornaam</label>
+                <input type="text" id="r-voornaam" placeholder="Jan">
+              </div>
+              <div class="form-field">
+                <label>Achternaam</label>
+                <input type="text" id="r-achternaam" placeholder="de Vries">
+              </div>
+              <div class="form-field">
+                <label>E-mailadres</label>
+                <input type="email" id="r-email" placeholder="jan@email.nl">
+              </div>
+              <div class="form-field">
+                <label>Telefoonnummer</label>
+                <input type="tel" id="r-telefoon" placeholder="06-12345678">
+              </div>
+              <div class="form-field">
+                <label>Profielfoto</label>
+                <input type="file" id="r-foto" accept="image/png, image/jpeg" onchange="handlePhotoPreview(this)" required>
+                <small>Upload een profielfoto zodat ouders u gemakkelijk herkennen.</small>
+                <div class="photo-preview" id="photo-preview" style="margin-top:0.75rem;display:none;">
+                  <img src="" alt="Profielfoto preview" style="max-width:120px;border-radius:16px;border:1px solid #dcd7ce;" />
+                </div>
+              </div>
+              <div class="form-field full">
+                <label class="checkbox-label"><input type="checkbox" id="r-show-contact"> Contactinformatie zichtbaar voor ouders</label>
+              </div>
+              <div class="form-field full">
+                <label>Korte introductie</label>
+                <textarea id="r-bio" rows="3" maxlength="250" placeholder="Vertel ouders iets over uzelf en uw ervaring…" oninput="updateCharCount()"></textarea>
+                <div class="char-count"><span id="char-count">0</span>/250</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="form-section-title">🚌 Voertuig & capaciteit <span>Verplicht</span></div>
+            <div class="form-grid cols-3">
+              <div class="form-field">
+                <label>Type voertuig</label>
+                <select id="r-voertuig">
+                  <option>Minibus (6-9 pers.)</option>
+                  <option>Schoolbus (10-20 pers.)</option>
+                  <option>Grote bus (20+ pers.)</option>
+                  <option>Personenauto</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Max. capaciteit</label>
+                <input type="number" id="r-capaciteit" placeholder="8" min="1" max="50">
+              </div>
+              <div class="form-field">
+                <label>Ervaringsjaren</label>
+                <input type="number" id="r-ervaring" placeholder="5" min="0">
+              </div>
+              <div class="form-field">
+                <label>Kenteken</label>
+                <input type="text" id="r-kenteken" placeholder="AB-123-C">
+              </div>
+              <div class="form-field">
+                <label>Rijbewijs type</label>
+                <select id="r-rijbewijs-type">
+                  <option>B</option>
+                  <option>B+E</option>
+                  <option>C</option>
+                  <option>D</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Rijbewijsnummer</label>
+                <input type="text" id="r-rijbewijs-nr" placeholder="123456789">
+              </div>
+              <div class="form-field">
+                <label>Bouwjaar voertuig</label>
+                <input type="number" id="r-bouwjaar" placeholder="2018" min="1990" max="2035">
+              </div>
+              <div class="form-field">
+                <label>Extra's</label>
+                <select id="r-extra">
+                  <option>Geen</option>
+                  <option>Airco</option>
+                  <option>Rolstoeltoegankelijk</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="form-section-title"> Route & school <span>Verplicht</span></div>
+            <div class="form-grid">
+              <div class="form-field">
+                <label>Wijk / route</label>
+                <select id="r-route">
+                  <option>Noord</option>
+                  <option>Zuid</option>
+                  <option>Oost</option>
+                  <option>West</option>
+                  <option>Centrum</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Aangesloten school</label>
+                <select id="r-school">
+                  <option>Basisschool De Zonnewijzer</option>
+                  <option>OBS Het Kompas</option>
+                  <option>CBS De Regenboog</option>
+                  <option>Basisschool St. Jozef</option>
+                  <option>IKC De Lenteboom</option>
+                  <option>Montessori Basisschool</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Vertrektijd ochtend</label>
+                <input type="time" id="r-tijd-och" value="07:30">
+              </div>
+              <div class="form-field">
+                <label>Vertrektijd middag</label>
+                <input type="time" id="r-tijd-mid" value="14:45">
+              </div>
+            </div>
+            <div style="margin-top:1rem;">
+              <label style="font-size:0.82rem;font-weight:600;color:var(--ink-mid);display:block;margin-bottom:0.6rem;">Beschikbare dagen</label>
+              <div class="days-grid" id="days-grid">
+                <div class="day-toggle on" onclick="toggleDay(this)">Ma</div>
+                <div class="day-toggle on" onclick="toggleDay(this)">Di</div>
+                <div class="day-toggle on" onclick="toggleDay(this)">Wo</div>
+                <div class="day-toggle on" onclick="toggleDay(this)">Do</div>
+                <div class="day-toggle on" onclick="toggleDay(this)">Vr</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="form-section-title"> Tarief</div>
+            <div class="form-grid cols-3">
+              <div class="form-field">
+                <label>Prijs per maand</label>
+                <input type="text" id="r-prijs">
+              </div>
+              <div class="form-field">
+                <label>Inclusief terug?</label>
+                <select id="r-terug">
+                  <option>Heen & terug</option>
+                  <option>Alleen heen</option>
+                  <option>Alleen terug</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:flex-start;padding:1rem;background:var(--amber-pale);border-radius:10px;margin-bottom:1.5rem;font-size:0.85rem;color:var(--ink-mid);">
+            <input type="checkbox" id="r-akkoord" style="margin-top:3px;width:16px;height:16px;accent-color:var(--amber);flex-shrink:0;">
+            <label for="r-akkoord">Ik verklaar dat ik beschik over een geldig rijbewijs (D of B), een VOG, en dat alle opgegeven informatie correct is. Ik ga akkoord met de <u style="cursor:pointer;">gebruiksvoorwaarden</u> van BusConnect.</label>
+          </div>
+          <button class="btn btn-amber btn-full" onclick="submitRegistration()" style="font-size:1rem;padding:0.9rem;">
+            🚌 Registreer als chauffeur
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <script src="click.js"></script>
+
+>>>>>>> eddec4eb15b5177084bc8265ba86f1224227012b
   
 </body>
 </html>

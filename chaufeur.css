@@ -28,7 +28,7 @@
   gap: 1rem;
 }
 
-.driver-avatar {
+..driver-avatar {
   width: 52px;
   height: 52px;
   border-radius: 50%;
@@ -41,6 +41,14 @@
   font-weight: 900;
   color: var(--ink);
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.driver-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .driver-name {
@@ -126,7 +134,7 @@
 
 /* ── MODAL ── */
 .modal-overlay {
-  display: none;
+  display: block;
   position: fixed;
   inset: 0;
   background: rgba(28,26,23,0.6);
@@ -403,7 +411,7 @@
 
 /* ── SUCCESS ── */
 .success-banner {
-  display: none;
+  display: ;
   background: var(--green-light);
   border: 1px solid #A8D5B8;
   border-radius: 12px;

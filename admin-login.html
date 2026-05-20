@@ -94,10 +94,7 @@
   </div>
 
   <script>
-    // Tijdelijk: sla direct een token op en ga naar dashboard
-    localStorage.setItem('admin_token', 'test-token-123');
-    window.location.href = 'admin-dashboard.html';
-
+  
     async function login() {
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
