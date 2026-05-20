@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BusConnect — Admin Dashboard</title>
+  <link rel="icon" href="buslogo.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #181c27;
+      --surface2: #1e2334;
+      --border: #2a2f3e;
+      --amber: #f5a623;
+      --amber-dim: rgba(245,166,35,0.12);
+      --text: #eef0f6;
+      --muted: #7a8099;
+      --danger: #e05252;
+      --danger-dim: rgba(224,82,82,0.12);
+      --success: #4caf7d;
+      --success-dim: rgba(76,175,125,0.12);
+      --blue: #5b8dee;
+      --blue-dim: rgba(91,141,238,0.12);
+      --radius: 12px;
+      --sidebar: 240px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      padding: 1.5rem 1.25rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--amber);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .logo-text span { color: var(--amber); }
+
+    .admin-tag {
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    .nav-menu {
+      padding: 1rem 0.75rem;
+      flex: 1;
+    }
+
+    .nav-section {
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.75rem 0.5rem 0.4rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.65rem 0.75rem;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--muted);
+      transition: background 0.15s, color 0.15s;
+      margin-bottom: 2px;
+    }
+
+    .nav-item:hover { background: var(--surface2); color: var(--text); }
+
+    .nav-item.active {
+      background: var(--amber-dim);
+      color: var(--amber);
+      font-weight: 500;
+    }
+
+    .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; }
+
+    .sidebar-footer {
+      padding: 1rem 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .logout-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.65rem 0.75rem;
+      border-radius: 9px;
+      border: none;
+      background: transparent;
+      color: var(--danger);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .logout-btn:hover { background: var(--danger-dim); }
+
+    /* ── MAIN ── */
+    .main {
+      margin-left: var(--sidebar);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .admin-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .admin-avatar {
+      width: 34px; height: 34px;
+      background: var(--amber);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #0f1117;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .content {
+      padding: 2rem;
+      flex: 1;
+    }
+
+    /* ── PANELS ── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── STATS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stat-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 3px; }
+
+    /* ── TABLE ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      padding: 1.1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+
+    td {
+      padding: 0.9rem 1.5rem;
+      font-size: 0.88rem;
+      border-bottom: 1px solid rgba(42,47,62,0.5);
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .status-actief { background: var(--success-dim); color: var(--success); }
+    .status-geblokkeerd { background: var(--danger-dim); color: var(--danger); }
+
+    .btn {
+      padding: 0.4rem 0.85rem;
+      border-radius: 8px;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    .btn:hover { opacity: 0.85; }
+    .btn:active { transform: scale(0.96); }
+
+    .btn-danger { background: var(--danger-dim); color: var(--danger); }
+    .btn-warning { background: rgba(245,166,35,0.12); color: var(--amber); }
+    .btn-primary { background: var(--amber); color: #0f1117; font-weight: 700; }
+    .btn-success { background: var(--success-dim); color: var(--success); }
+    .btn-blue { background: var(--blue-dim); color: var(--blue); }
+
+    .btn-group { display: flex; gap: 0.4rem; }
+
+    /* ── FORM ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-field.full { grid-column: 1 / -1; }
+
+    .form-field label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 0.7rem 0.9rem;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      border-color: var(--amber);
+    }
+
+    .form-field textarea { min-height: 100px; resize: vertical; }
+
+    .form-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+
+    /* ── MELDING ── */
+    .melding-select-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .melding-select-row select {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 0.7rem 0.9rem;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .melding-textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 0.85rem 1rem;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      min-height: 110px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 1rem;
+    }
+
+    .melding-textarea:focus { border-color: var(--amber); }
+
+    /* toast */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      font-size: 0.9rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+      z-index: 999;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-color: var(--success); }
+    .toast.error { border-color: var(--danger); }
+
+    /* empty state */
+    .empty {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .empty .icon { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; }
+
+    /* loading */
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-row">
+      <div class="logo-icon">🚌</div>
+      <div class="logo-text">Bus<span>Connect</span></div>
+    </div>
+    <div class="admin-tag">Admin Paneel</div>
+  </div>
+
+  <nav class="nav-menu">
+    <div class="nav-section">Beheer</div>
+    <div class="nav-item active" onclick="showPanel('dashboard')">
+      <span class="icon">📊</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPanel('chauffeurs')">
+      <span class="icon">👨‍✈️</span> Chauffeurs
+    </div>
+    <div class="nav-section">Planning</div>
+    <div class="nav-item" onclick="showPanel('routes')">
+      <span class="icon">🗺️</span> Routes & Ritten
+    </div>
+    <div class="nav-section">Communicatie</div>
+    <div class="nav-item" onclick="showPanel('meldingen')">
+      <span class="icon">🔔</span> Meldingen
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="logout-btn" onclick="logout()">
+      <span>🚪</span> Uitloggen
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="page-title" id="topbar-title">Dashboard</div>
+    <div class="admin-info">
+      <span>Administrator</span>
+      <div class="admin-avatar">A</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── DASHBOARD ── -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--amber-dim)">👨‍✈️</div>
+          <div>
+            <div class="stat-num" id="stat-total">—</div>
+            <div class="stat-label">Totaal chauffeurs</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--success-dim)">✅</div>
+          <div>
+            <div class="stat-num" id="stat-actief">—</div>
+            <div class="stat-label">Actief</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--danger-dim)">🚫</div>
+          <div>
+            <div class="stat-num" id="stat-geblokkeerd">—</div>
+            <div class="stat-label">Geblokkeerd</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--blue-dim)">🗺️</div>
+          <div>
+            <div class="stat-num" id="stat-routes">—</div>
+            <div class="stat-label">Routes</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recente chauffeurs</div>
+          <button class="btn btn-primary" onclick="showPanel('chauffeurs')">Alles bekijken</button>
+        </div>
+        <div id="recent-table"><div class="loading">⏳ Laden...</div></div>
+      </div>
+    </div>
+
+    <!-- ── CHAUFFEURS ── -->
+    <div class="panel" id="panel-chauffeurs">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">👨‍✈️ Alle chauffeurs</div>
+          <button class="btn btn-primary" onclick="laadChauffeurs()">↻ Vernieuwen</button>
+        </div>
+        <div id="chauffeurs-table"><div class="loading">⏳ Laden...</div></div>
+      </div>
+    </div>
+
+    <!-- ── ROUTES ── -->
+    <div class="panel" id="panel-routes">
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div class="card-header">
+          <div class="card-title">➕ Nieuwe route toevoegen</div>
+        </div>
+        <div style="padding:1.5rem;">
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Routenaam</label>
+              <input type="text" id="r-naam" placeholder="bijv. Noord Route A"/>
+            </div>
+            <div class="form-field">
+              <label>Van</label>
+              <input type="text" id="r-van" placeholder="Startpunt"/>
+            </div>
+            <div class="form-field">
+              <label>Naar</label>
+              <input type="text" id="r-naar" placeholder="Eindpunt"/>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="voegRouteToe()">Route toevoegen</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div class="card-header">
+          <div class="card-title">➕ Nieuwe rit plannen</div>
+        </div>
+        <div style="padding:1.5rem;">
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Route</label>
+              <select id="rit-route"><option value="">-- selecteer route --</option></select>
+            </div>
+            <div class="form-field">
+              <label>Chauffeur</label>
+              <select id="rit-chauffeur"><option value="">-- selecteer chauffeur --</option></select>
+            </div>
+            <div class="form-field">
+              <label>Datum</label>
+              <input type="date" id="rit-datum"/>
+            </div>
+            <div class="form-field">
+              <label>Tijd</label>
+              <input type="time" id="rit-tijd"/>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="voegRitToe()">Rit plannen</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🗺️ Alle routes</div>
+          <button class="btn btn-primary" onclick="laadRoutes()">↻ Vernieuwen</button>
+        </div>
+        <div id="routes-table"><div class="loading">⏳ Laden...</div></div>
+      </div>
+    </div>
+
+    <!-- ── MELDINGEN ── -->
+    <div class="panel" id="panel-meldingen">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📨 Melding sturen naar chauffeur</div>
+        </div>
+        <div style="padding:1.5rem;">
+          <div class="melding-select-row">
+            <select id="m-chauffeur">
+              <option value="">-- selecteer chauffeur --</option>
+            </select>
+          </div>
+          <textarea class="melding-textarea" id="m-bericht" placeholder="Typ hier je melding voor de chauffeur..."></textarea>
+          <button class="btn btn-primary" onclick="stuurMelding()">🔔 Melding versturen</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const TOKEN = localStorage.getItem('admin_token');
+
+  // Auth check
+  if (!TOKEN) window.location.href = 'admin-login.html';
+
+  const headers = {
+  'Content-Type': 'application/json'
+};
+
+
+  // ── PANEL NAVIGATIE ──
+  function showPanel(name) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+
+    const navItems = {
+      dashboard: 0, chauffeurs: 1, routes: 3, meldingen: 5
+    };
+
+    const items = document.querySelectorAll('.nav-item');
+    const idx = { dashboard:0, chauffeurs:1, routes:2, meldingen:3 };
+    if (items[idx[name]]) items[idx[name]].classList.add('active');
+
+    const titles = { dashboard:'Dashboard', chauffeurs:'Chauffeurs beheren', routes:'Routes & Ritten', meldingen:'Meldingen sturen' };
+    document.getElementById('topbar-title').textContent = titles[name] || name;
+
+    if (name === 'chauffeurs') laadChauffeurs();
+    if (name === 'routes') { laadRoutes(); laadDropdowns(); }
+    if (name === 'meldingen') laadMeldingDropdown();
+    if (name === 'dashboard') laadDashboard();
+  }
+
+  // ── TOAST ──
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = (type === 'success' ? '✅ ' : '❌ ') + msg;
+    t.className = 'toast show ' + type;
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ── DASHBOARD ──
+  async function laadDashboard() {
+    try {
+      const res = await fetch('/api/chauffeurs', { headers });
+      const chauffeurs = await res.json();
+
+      const actief = chauffeurs.filter(c => c.status !== 'geblokkeerd').length;
+      const geblokkeerd = chauffeurs.filter(c => c.status === 'geblokkeerd').length;
+
+      document.getElementById('stat-total').textContent = chauffeurs.length;
+      document.getElementById('stat-actief').textContent = actief;
+      document.getElementById('stat-geblokkeerd').textContent = geblokkeerd;
+
+      const routeRes = await fetch('/api/routes', { headers });
+      const routes = await routeRes.json();
+      document.getElementById('stat-routes').textContent = routes.length;
+
+      const recent = chauffeurs.slice(-5).reverse();
+      document.getElementById('recent-table').innerHTML = recent.length === 0
+        ? '<div class="empty"><span class="icon">👨‍✈️</span>Nog geen chauffeurs</div>'
+        : `<table>
+            <thead><tr><th>Naam</th><th>E-mail</th><th>Status</th></tr></thead>
+            <tbody>${recent.map(c => `
+              <tr>
+                <td>${c.naam}</td>
+                <td>${c.email || '—'}</td>
+                <td><span class="status-badge ${c.status === 'geblokkeerd' ? 'status-geblokkeerd' : 'status-actief'}">
+                  ${c.status === 'geblokkeerd' ? '🚫 Geblokkeerd' : '✅ Actief'}
+                </span></td>
+              </tr>`).join('')}
+            </tbody>
+          </table>`;
+    
+} catch (e) {
+  console.log('FOUT:', e);
+  document.getElementById('recent-table').innerHTML = '<div class="empty">❌ Kan data niet laden. Controleer de server.</div>';
+}
+    }
+
+
+  // ── CHAUFFEURS ──
+  async function laadChauffeurs() {
+    document.getElementById('chauffeurs-table').innerHTML = '<div class="loading">⏳ Laden...</div>';
+    try {
+      const res = await fetch('/api/chauffeurs', { headers });
+      const data = await res.json();
+
+      if (!Array.isArray(data) || data.length === 0) {
+        document.getElementById('chauffeurs-table').innerHTML = '<div class="empty"><span class="icon">👨‍✈️</span>Geen chauffeurs gevonden.</div>';
+        return;
+      }
+
+      document.getElementById('chauffeurs-table').innerHTML = `
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Naam</th><th>E-mail</th><th>Telefoon</th><th>Status</th><th>Acties</th></tr>
+          </thead>
+          <tbody>
+            ${data.map(c => `
+              <tr id="row-${c.id}">
+                <td style="color:var(--muted)">#${c.id}</td>
+                <td><strong>${c.naam}</strong></td>
+                <td>${c.email || '—'}</td>
+                <td>${c.telefoon || '—'}</td>
+                <td>
+                  <span class="status-badge ${c.status === 'geblokkeerd' ? 'status-geblokkeerd' : 'status-actief'}">
+                    ${c.status === 'geblokkeerd' ? '🚫 Geblokkeerd' : '✅ Actief'}
+                  </span>
+                </td>
+                <td>
+                  <div class="btn-group">
+                    <button class="btn btn-warning" onclick="blokkeer(${c.id}, '${c.naam}')">
+                      ${c.status === 'geblokkeerd' ? '✅ Deblokkeer' : '🚫 Blokkeer'}
+                    </button>
+                    <button class="btn btn-danger" onclick="verwijder(${c.id}, '${c.naam}')">🗑️ Verwijder</button>
+                  </div>
+                </td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`;
+    } catch (e) {
+      document.getElementById('chauffeurs-table').innerHTML = '<div class="empty">❌ Fout bij laden.</div>';
+    }
+  }
+
+  async function blokkeer(id, naam) {
+    if (!confirm(`Wil je "${naam}" blokkeren/deblokkeren?`)) return;
+    try {
+      await fetch(`/api/chauffeurs/${id}/blokkeer`, { method: 'PUT', headers });
+      showToast(`${naam} status aangepast.`);
+      laadChauffeurs();
+    } catch { showToast('Fout bij blokkeren.', 'error'); }
+  }
+
+  async function verwijder(id, naam) {
+    if (!confirm(`Weet je zeker dat je "${naam}" wilt verwijderen? Dit kan niet ongedaan worden gemaakt.`)) return;
+    try {
+      await fetch(`/api/chauffeurs/${id}`, { method: 'DELETE', headers });
+      showToast(`${naam} verwijderd.`);
+      laadChauffeurs();
+    } catch { showToast('Fout bij verwijderen.', 'error'); }
+  }
+
+  // ── ROUTES ──
+  async function laadRoutes() {
+    document.getElementById('routes-table').innerHTML = '<div class="loading">⏳ Laden...</div>';
+    try {
+      const res = await fetch('/api/routes', { headers });
+      const data = await res.json();
+
+      if (!Array.isArray(data) || data.length === 0) {
+        document.getElementById('routes-table').innerHTML = '<div class="empty"><span class="icon">🗺️</span>Geen routes gevonden.</div>';
+        return;
+      }
+
+      document.getElementById('routes-table').innerHTML = `
+        <table>
+          <thead><tr><th>ID</th><th>Naam</th><th>Van</th><th>Naar</th></tr></thead>
+          <tbody>
+            ${data.map(r => `
+              <tr>
+                <td style="color:var(--muted)">#${r.id}</td>
+                <td><strong>${r.naam}</strong></td>
+                <td>${r.van}</td>
+                <td>${r.naar}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`;
+    } catch {
+      document.getElementById('routes-table').innerHTML = '<div class="empty">❌ Fout bij laden.</div>';
+    }
+  }
+
+  async function voegRouteToe() {
+    const naam = document.getElementById('r-naam').value.trim();
+    const van = document.getElementById('r-van').value.trim();
+    const naar = document.getElementById('r-naar').value.trim();
+    if (!naam || !van || !naar) { showToast('Vul alle velden in.', 'error'); return; }
+
+    try {
+      await fetch('/api/routes', { method: 'POST', headers, body: JSON.stringify({ naam, van, naar }) });
+      showToast('Route toegevoegd!');
+      document.getElementById('r-naam').value = '';
+      document.getElementById('r-van').value = '';
+      document.getElementById('r-naar').value = '';
+      laadRoutes();
+      laadDropdowns();
+    } catch { showToast('Fout bij toevoegen.', 'error'); }
+  }
+
+  async function voegRitToe() {
+    const route_id = document.getElementById('rit-route').value;
+    const chauffeur_id = document.getElementById('rit-chauffeur').value;
+    const datum = document.getElementById('rit-datum').value;
+    const tijd = document.getElementById('rit-tijd').value;
+    if (!route_id || !chauffeur_id || !datum || !tijd) { showToast('Vul alle velden in.', 'error'); return; }
+
+    try {
+      await fetch('/api/routes/ritten', { method: 'POST', headers, body: JSON.stringify({ route_id, chauffeur_id, datum, tijd }) });
+      showToast('Rit gepland!');
+    } catch { showToast('Fout bij plannen.', 'error'); }
+  }
+
+  async function laadDropdowns() {
+    try {
+      const [routeRes, chaufRes] = await Promise.all([
+        fetch('/api/routes', { headers }),
+        fetch('/api/chauffeurs', { headers })
+      ]);
+      const routes = await routeRes.json();
+      const chauffeurs = await chaufRes.json();
+
+      document.getElementById('rit-route').innerHTML =
+        '<option value="">-- selecteer route --</option>' +
+        (Array.isArray(routes) ? routes.map(r => `<option value="${r.id}">${r.naam}</option>`).join('') : '');
+
+      document.getElementById('rit-chauffeur').innerHTML =
+        '<option value="">-- selecteer chauffeur --</option>' +
+        (Array.isArray(chauffeurs) ? chauffeurs.map(c => `<option value="${c.id}">${c.naam}</option>`).join('') : '');
+    } catch {}
+  }
+
+  // ── MELDINGEN ──
+  async function laadMeldingDropdown() {
+    try {
+      const res = await fetch('/api/chauffeurs', { headers });
+      const data = await res.json();
+      document.getElementById('m-chauffeur').innerHTML =
+        '<option value="">-- selecteer chauffeur --</option>' +
+        (Array.isArray(data) ? data.map(c => `<option value="${c.id}">${c.naam}</option>`).join('') : '');
+    } catch {}
+  }
+
+  async function stuurMelding() {
+    const chauffeur_id = document.getElementById('m-chauffeur').value;
+    const bericht = document.getElementById('m-bericht').value.trim();
+    if (!chauffeur_id || !bericht) { showToast('Selecteer een chauffeur en typ een bericht.', 'error'); return; }
+
+    try {
+      await fetch('/api/meldingen', { method: 'POST', headers, body: JSON.stringify({ chauffeur_id, bericht }) });
+      showToast('Melding verstuurd!');
+      document.getElementById('m-bericht').value = '';
+      document.getElementById('m-chauffeur').value = '';
+    } catch { showToast('Fout bij versturen.', 'error'); }
+  }
+
+  // ── LOGOUT ──
+  function logout() {
+    if (confirm('Wil je uitloggen?')) {
+      localStorage.removeItem('admin_token');
+      window.location.href = 'admin-login.html';
+    }
+  }
+
+  // ── INIT ──
+  laadDashboard();
+</script>
+</body>
+</html>
