@@ -1,0 +1,271 @@
+
+
+nav{
+    background-image: linear-gradient(to bottom, #e2a43f, #acab96);
+    padding: 0 2rem;
+    top:0;
+    
+    display: flex;
+    align-items: center; /*is the horizonline van waar je jouw content wilt*/
+    justify-content: flex-end;/*verticale position, where u want the content to be if you say flex-start its at your left
+    if you type center then its in the middle, flex-end is on your right */
+    height:150px;
+    position: sticky; /*this mean the text wont move it will stay at one place even if u scroll*/
+    z-index: 200;
+  mask:
+  radial-gradient(30px at 75% 100%,#0000 98%,#000) calc(50% + 60px) calc(100% - 30px)/120px 90% repeat-x,/*the 90% is the height of the mask, i had to change it or else it doesnt take the full screen on top */
+    radial-gradient(30px at 25% 50% ,#000 99%,#0000 101%) calc(50% + 60px) 100%/120px 60px repeat-x
+}
+.nav-pills{
+    display: flex;
+    gap: 0.25rem;
+    border-radius: 99px;
+    
+    padding: 4px;
+    background: rgba(42, 39, 35, 0.12);
+    
+    
+}
+.nav-pill{
+    padding: 0.4rem 1.2rem;
+    border-radius: 20px;
+    border:none;
+    font-family:cursive;
+    font-size: 1.2rem;
+    font-weight: 600;
+    position: sticky;
+    cursor: pointer;
+    transition: all;
+    background: transparent;
+    color: rgb(243, 239, 229);
+
+}
+.nav-pill.active {
+    background-image: linear-gradient(to right, #f1df9d, #84856a);
+ color: #3c4438; /*this is the color that showes when your cursor is on it and the page is open*/
+}
+.nav-pill:hover:not(.active) {
+    background: rgb(28,26,23, 0.1);
+
+}
+
+
+
+
+.wavy2{
+    background: #90914b;
+    display: flex;
+    position: relative;
+z-index: 2; /*goes to the front*/
+    margin-top: -150px;
+    padding: 5rem 2rem;
+  mask: /*this code comes from a website but ive deleted a line to make it work as i want*/
+    radial-gradient(30px at 75% 100%,#0000 98%,#000) calc(50% + 60px) calc(100% - 30px)/120px 51% repeat-x,
+    radial-gradient(30px at 25% 50% ,#000 99%,#0000 101%) calc(50% + 60px) 100%/120px 60px repeat-x;
+
+}
+img{
+    height: 350px;
+padding: 40px;
+    display: inline-block;
+    animation: bounce 2s ease-in-out infinite;
+}
+@keyframes bounce{ /*bounce is the name of the animation so u gotta name it here too*/
+    0%, 100%{
+        transform: translateY(0px);/*this translate is op de y-as */
+
+    }
+    50%{ 
+        transform:translateY(-3px);
+    }
+}
+
+.circle{
+    display:block;
+    position: absolute;
+    background-image:linear-gradient(to bottom, var(--yellow-light), var(--green-light));
+    height: 350px;
+    width: 340px;
+    border-radius: 99px;
+    margin-right: 50%;
+    margin-top: -250px;
+    z-index: 2;
+
+}
+/*
+Think of it as a hybrid between inline and block.
+inline (like <span>)
+Stays in the same line as text
+Ignores width/height
+No vertical margins
+-- block (like <div>)
+Takes full width
+Starts on a new line
+Respects width/height--
+inline-block
+Stays in line (like text)
+BUT respects width and height (like block)*/
+.hero{
+    z-index:1; /*comes in the back of the wavy element */
+    margin-top: -60px;
+    background-color: #a5a178;
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 4px 4px rgb(116, 114, 114);
+
+    
+}
+
+.hero::before {
+    content: '';
+    position: absolute;/*leave it absolute or else the linear will fade away and it will be a plain background*/
+    inset: 0;
+    background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 40px,
+        rgba(43, 41, 39, 0.4)40px,
+        rgba(43, 41, 39, 0.4) 80px
+
+    );
+}
+.hero-tag{
+    display: inline-block;
+    background-color: #84856a;
+    color: #000;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border-radius: 99px;
+    position: absolute; /*leave it absolute or else the background on the hero class will show*/
+    margin: 0;
+    
+}
+.hero h1{
+display: inline-block;
+letter-spacing:0.1em;
+font-size: 50px;
+max-width: 550px;
+margin-top: 40px;
+margin-left: 300px;
+
+}
+.hero p{
+    margin-left: 33rem;
+    margin-top: 50px;
+    max-width: 550px;
+    font-size: 1.5rem;
+    position: relative; /*relative is used so it doesnt show the background nor goes away from the line*/
+    color: #abb0a6;
+    background-color: #1d1f1b;
+    box-shadow:  4px 4px ;
+    border-radius: 20px;
+    overflow: hidden;
+
+    
+}
+ 
+
+.filter-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;/*when the space gets smaller the grit changes accordingly to the minmax px, and how many colums 
+    you want is given in fr*/
+    align-items: end;
+}
+.filter-bar {
+    background:#f1ead3;
+    border: 1px solid #e8f1e3;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+
+    
+
+}
+.field label{
+    display: grid;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #3c4438;
+    margin-bottom: 0.4rem;
+    
+}
+.field input, .field select{
+    width: 50%; /*breedte van het selectie button*/
+    padding: 0.65rem 0.9rem;
+    border: 1.5px solid grey;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #3c4438;
+    background: rgb(116, 114, 114, 0.5);
+    transition: border-color 0.15s;
+    outline: none;
+}
+
+.btn {
+    display: inline-block;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-decoration: none;
+}
+.filter-btn, .btn-primary{
+    display: inline-flex;
+    font-size: 0.875rem;  
+    gap: 4rem;
+    width:150px;
+    align-items: flex-end;
+    background: rgb(70, 58, 58, 0.1) ;
+}
+.filter-btn:hover, .btn-primary:hover{
+    padding: 0.65rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    background: #1d1f1b;
+    color: #fff;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+
+
+
+.container{
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+.section-header{
+    margin-bottom: 2rem;
+    margin-top: 4rem;
+}
+
+.section-header h2{
+    font-size: 1.9rem;
+    color: #1d1f1b;
+    margin-bottom: 0.4rem;
+}
+
+.section-header p {
+    color: #1d1f1b;
+}
+.count{
+    font-size:1rem;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+font-weight: 400;
+color:#1d1f1b;
+}
