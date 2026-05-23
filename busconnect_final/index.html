@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BusConnect</title>
+      <link rel="icon" title="image" href="img/bus.png"/>
+          <link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/home.css"/>
+
+
+</head>
+<body>
+     
+    <div class="header"></div>
+        <div class="switch">
+            <!-- The Toggle Control -->
+<div class="toggle-container">
+  <a href="index.html" _blank><img src="IMG/light-bulb (1).png"class=" switch-on"/></a>
+   <a href="index1.html" _blank><img src="IMG/lighting-bulb.png" class="switch-off"/></a>
+</div>
+
+
+  
+        </div>
+        <div class="page">
+        <ul>
+            <li><a href="index.html">home</a></li>
+            <li><a href="contact.html">contact</a></li>
+            <li><a href="over-ons.html">over ons</a></li>
+            <li><a href="FAQ.html">FAQ</a></li>
+            <li><a href="chauffeurs.html">chauffeurs-registratie</a></li>
+        </ul>
+    <br/>      
+                <section>
+                                <div class="container-hero">
+                                             <img src="IMG/schoolbus.jpg" class="logo"/>
+            <div class="page active">
+                <div class="hero-tag"> &#128680 veilig schoolvervoer</div><br/> <!--you have to put your tag here or else it wont show -->
+                
+           <h1> vind de <span>perfecten</span><br/> 
+            schoolbusschauffuer voor uw kind </h1>
+           <p> bekijk de beschikbare chauffuers in uw buurt, vergelijk routes en boek met vertrouwen</p>
+        
+        </div>
+    </div>
+        
+
+    </section>
+    
+    <br/>
+    
+    
+    <div class="container" id="zoek">
+        <div class="filter-bar">
+            <h3> filter uw wensen</h3>
+            <div class="filter-grid">
+                <div class="field"> 
+                    <label> zoek op naam/route</label>
+                    <input type ="text" id="f-search" oninput="filterDrivers()">
+
+                </div>
+                    <div class="field">
+                <label for="category">onderwijsniveau</label>
+                <select id="category" onchange="updateOptions()">
+                <!--als je wilt dat het niet telkens verander haal die stuk vanaf onchange tot() weg-->
+            <option value="">--select--</option><!-- hier moeten alle school nivuea zodat je bij scholen de juiste schoolniveau krijgt-->
+                <option value="GLO" > GLO </option>
+             <option value="VOJ"> VOJ </option>
+             <option value="HBO">HBO</option>
+                </select>
+
+            </div>
+            <div class="field"> 
+                <label for="items"> school</label>
+                <select id="f-school" class="items">
+                    <option value=""> --alle scholen--</option>
+                    <option value="" data-category="GLO">openbare scholen (O.S)</option><!--bij data-category plaats je bij welk value het behoord
+                    vb valye is daar GLO dus moet bij category="GLO" zijn-->
+                    <option value="" data-category="GLO">O.S Flora</option>
+                    <option data-category="GLO">O.S Welgelegen</option>
+                        <option data-category="GLO">O.S. Sophia's Lust.</option>
+
+                    </option>
+               
+                    <option value="" data-category="VOJ"> havo</option><!-- do dezelfde van GLO hier bij VOJ--> <!--bij het maken van meer opties copy paste je gewoon een optie die je al daar ziet
+                    en maak je veranderingen erin-->
+                    <option value="" data-category="VOJ">imeao</option>
+                     <option value="" data-category="VOJ">VWO</option>
+
+                <option value=""data-category="HBO">anton de kom universiteit</option>
+                <option value="" data-category="HBO">UNASAT</option>
+                </select>
+
+            </div>
+                <div class="field">
+<label for="wijk/route">wijk/route</label>
+<select id="f-route"> 
+    <option value="">--alle routen</option>
+    <option value=""> noord</option><!-- alle wijken hierin plaatsen-->
+     <option>Zuid</option>
+                  <option>Oost</option>
+                  <option>West</option>
+</select>
+                </div>
+<div class="field"> 
+    <label for="beschikbaarheid">beschikbaarheid</label>
+<select id="f-dag">
+    <option value="">--alle dagen--</option>
+    <option value=""> maandag</option>
+    <option value=""> dinsdag</option>
+    <option value=""> woensdag</option>
+    <option value=""> donderdag</option>
+    <option value=""> vrijdag</option>
+</select>
+</div>
+<div class="field">
+    <label for="prijs">prijs</label>
+    <select id="f-prijs">
+        <option value="">--alle prijzen--</option>
+        <option value=""> </option> <!--prijsen hierin aangeven -->
+    </select>
+    </div>
+    
+    <button class="btn filter-btn" onclick="filterDrivers()"> filter<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></button>
+           
+<button class="btn btn-primary" onclick="resetFilters()">reset <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-corner-down-left-icon lucide-corner-down-left"><path d="M20 4v7a4 4 0 0 1-4 4H4"/><path d="m9 10-5 5 5 5"/></svg></button>
+        </div>
+        
+        
+        <br/>
+        <center>
+        <div class="section-header"> 
+            <h2>beschikbare chauffeurs<span id="result-count"  class="count"></span></h2>
+        <p> klick op de kaart om meer details te zien en contact op nemen</p>
+        </div>
+        </center>
+        <div class="driver-grid" id="driver-grid">
+            <!--hier komen de chauffeurs kaarten te staan-->
+
+    </div>
+    <div class="empty-state" id="empty-state" style="display: none;">
+        <span class="emoji">❌</span>
+        <p> geen chauffeurs gevonden, probeer andere filters</p>
+    </div>
+    </div>
+        
+        <br/>
+
+
+
+<!---this is active page-contact -->
+
+    </div>
+     </div>
+</div>
+
+
+    
+</div>
+ <!-- ─── CTA Banner ─── -->
+  <section class="section--sm" style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <div class="container" style="text-align:center;max-width:600px;">
+      <span class="section-label">Bent u een chauffeur?</span>
+      <h2 style="margin-bottom:0.75rem;">Vergroot uw bereik met BusConnect</h2>
+      <p style="margin-bottom:2rem;">Maak gratis een profiel aan en bereik honderden ouders in Suriname die op zoek zijn naar betrouwbaar schoolvervoer.</p>
+      <a href="chauffeurs.html" class="btn btn--primary">Gratis Registreren</a>
+    </div>
+  </section>
+
+  <!-- ─── Footer ─── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <div class="nav__logo" style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;">🚌 Bus<span style="color:var(--accent)">Connect</span></div>
+          <p>Het centrale platform voor schoolbus diensten in Suriname. Veilig, overzichtelijk en betrouwbaar.</p>
+        </div>
+        <div class="footer__col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="chauffeurs.html">Chauffeurs-registratie</a></li>
+            
+            <li><a href="login.html">Inloggen</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Informatie</h4>
+          <ul>
+            <li><a href="over-ons.html">Over Ons</a></li>
+            <li><a href="FAQ.HTML">FAQ</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Groep</h4>
+          <ul>
+            <li><a href="over-ons.html">The Element 3</a></li>
+            <li><a href="#">Adis Uni</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 BusConnect — The Element 3</span>
+        <span>Gemaakt voor Suriname 🇸🇷</span>
+      </div>
+    </div>
+  </footer>
+
+ 
+  <script src="js/main.js"></script>
+  <scrip src="js/f.js"></scrip>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>contact</title>
+       <link rel="icon" title="image" href="img/bus.png"/>
+          <link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/home.css"/>
+
+</head>
+<body>
+    <div class="header"></div>
+        <div class="switch">
+        <a href="index1.html"><img src="IMG/light-bulb (1).png"class=" switch-off"/></a>
+       <a href="index.html"> <img src="IMG/lighting-bulb.png" class="switch-on"/></a>
+        </div>
+        <div class="page">
+        <ul>
+            <li><a href="home.html">home</a></li>
+            <li><a href="contact.html">contact</a></li>
+            <li><a href="over-ons.html">over ons</a></li>
+            <li><a href="FAQ.html">FAQ</a></li>
+            <li><a href="chauffeurs.html">chauffeurs-registratie</a></li>
+        </ul>
+    <br/>      
+    <div id="page-contact">
+  <div class="container">
+    <div class="section-header">
+      <h2>Contact</h2>
+      <p>Heeft u vragen, opmerkingen of behoefte aan meer informatie over Bus Connect? Neem gerust contact met ons op. Wij staan klaar om u zo goed mogelijk te helpen.</p>
+    </div>
+    <div class="contact-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+      <div class="contact-info" style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:var(--shadow);">
+        <p>Heeft u vragen, opmerkingen of behoefte aan meer informatie over Bus Connect? Neem gerust contact met ons op. Wij staan klaar om u zo goed mogelijk te helpen.</p>
+        <p>📧 E-mail: <a href="mailto:info@busconnect.sr">info@busconnect.sr</a></p>
+        <p>📞 Telefoon: +597 000-0000</p>
+        <p>📍 Locatie: Paramaribo, Suriname</p>
+        <p>Of vul het contactformulier in en wij nemen zo spoedig mogelijk contact met u op.</p>
+      </div>
+      <div class="contact-form-card" style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:var(--shadow);">
+        <form id="contact-form" onsubmit="submitContactForm(event)">
+          <div class="form-grid" style="grid-template-columns:1fr;gap:1rem;">
+            <div class="form-field">
+              <label>Naam</label>
+              <input type="text" id="contact-name" placeholder="Uw naam">
+            </div>
+            <div class="form-field">
+              <label>E-mail</label>
+              <input type="email" id="contact-email" placeholder="naam@email.nl">
+            </div>
+            <div class="form-field">
+              <label>Telefoonnummer</label>
+              <input type="tel" id="contact-phone" placeholder="06-12345678">
+            </div>
+            <div class="form-field">
+              <label>Vraag</label>
+              <textarea id="contact-message" rows="4" placeholder="Wat wilt u weten?"></textarea>
+            </div>
+            <button class="btn btn-amber btn-full" type="submit">Verstuur bericht</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
