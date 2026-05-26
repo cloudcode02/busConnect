@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BusConnect — Suriname's Schoolbus Platform</title>
-  <link rel="icon" href="buslogo.png" />
-  <link rel="stylesheet" href="main.css" />
+  <link rel="icon" href="img/buslogo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/main.css" />
 </head>
 <body>
 
   <nav>
     <a class="nav-logo" href="#" onclick="showPage('home'); return false;">
-      <img src="buslogo.png" alt="BusConnect logo" />
+      <img src="img/buslogo.svg" alt="BusConnect logo" />
       🚌 Bus<span>Connect</span>
     </a>
 
@@ -52,7 +52,7 @@
 
   <div id="page-home" class="page active">
     <div class="hero">
-      <img src="buslogo.png" alt="BusConnect logo" class="hero-logo" />
+      <img src="img/buslogo.svg" alt="BusConnect logo" class="hero-logo" />
       <div class="hero-tag">🇸🇷 Suriname's #1 Schoolbus Platform</div>
       <h1>Veilig en <span>betrouwbaar</span> schoolvervoer vinden</h1>
       <p>BusConnect verbindt ouders met gecertificeerde schoolbuschauffeurs in Suriname. Bekijk routes, vergelijk prijzen en neem direct contact op.</p>
@@ -605,6 +605,6 @@
 
   <!-- Socket.IO client (geserveerd door de eigen server, of via CDN als fallback) -->
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
-  <script type="module" src="main.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

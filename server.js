@@ -146,6 +146,14 @@ app.get('/api/config', (req, res) => {
     res.json({ mapsKey: process.env.GOOGLE_MAPS_KEY || '' });
 });
 
+// Mount authentication routes (JWT demo)
+try {
+    const authRoutes = require('./routes/auth')();
+    app.use('/api/auth', authRoutes);
+} catch (e) {
+    console.warn('Auth routes not available:', e && e.message);
+}
+
 // ── API: Bus status overview ──────────────────────────────────
 app.get('/api/tracker/status', (req, res) => {
     const buses = [];
@@ -205,6 +213,19 @@ app.post('/api/register-driver', (req, res) => {
         res.json({ success: true, user_id: result.insertId });
     });
 });
+
+// Example protected route using validation and auth middleware
+try {
+    const validate = require('./middlewares/validate');
+    const authMw   = require('./middlewares/auth');
+
+    app.post('/api/secure/contact', validate({ required: ['name', 'email', 'message'] }), (req, res) => {
+        // this demonstrates request validation; in production, also apply authMw where appropriate
+        res.json({ success: true, received: req.body });
+    });
+} catch (e) {
+    console.warn('Validation or auth middleware not available:', e && e.message);
+}
 
 // ── API: Get all drivers ──────────────────────────────────────
 app.get('/api/drivers', (req, res) => {
