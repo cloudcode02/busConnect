@@ -1,0 +1,9 @@
+# Omgevingsvariabelen — nooit publiceren
+.env
+
+# Node modules
+node_modules/
+
+# Logbestanden
+*.log
+npm-debug.log*
