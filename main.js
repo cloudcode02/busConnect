@@ -6,6 +6,9 @@
 
 'use strict';
 
+// Define your backend base URL
+const API_BASE_URL = 'http://localhost:3000'; 
+
 // ── 1. THEME TOGGLE (Dark / Light Mode) ──────────────────────
 function initThemeToggle() {
   const toggle = document.getElementById('theme-toggle');
@@ -32,25 +35,20 @@ function applyTheme(theme) {
 
 // ── 2. PAGE NAVIGATION (SPA) ─────────────────────────────────
 function showPage(page) {
-  // Hide all pages
   document.querySelectorAll('.page').forEach(p => {
     p.classList.remove('active');
   });
 
-  // Show target page
   const target = document.getElementById('page-' + page);
   if (target) {
     target.classList.add('active');
-    // Trigger scroll reveals on the new page
     setTimeout(checkReveal, 50);
   }
 
-  // Update nav pill active state
   document.querySelectorAll('.nav-pill').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('data-page') === page);
   });
 
-  // Scroll to top smoothly
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -64,7 +62,6 @@ function initHamburger() {
     mobileMenu.classList.toggle('open');
   });
 
-  // Close mobile menu when a link is clicked
   mobileMenu.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       mobileMenu.classList.remove('open');
@@ -79,12 +76,10 @@ function toggleFaq(questionEl) {
 
   const isOpen = item.classList.contains('open');
 
-  // Close all open items
   document.querySelectorAll('.faq-item.open').forEach(openItem => {
     openItem.classList.remove('open');
   });
 
-  // Open clicked item if it was closed
   if (!isOpen) {
     item.classList.add('open');
   }
@@ -147,6 +142,13 @@ function filterDrivers() {
     if (search && !d.naam.toLowerCase().includes(search) && !(d.route || '').toLowerCase().includes(search)) return false;
     if (school && d.school !== school) return false;
     if (route  && d.route  !== route)  return false;
+    
+    const selectedDay = document.getElementById('f-dag')?.value || '';
+    if (selectedDay && d.dagen && d.dagen.length > 0) {
+      const hasDay = d.dagen.some(day => day.trim().toLowerCase().includes(selectedDay.toLowerCase()));
+      if (!hasDay) return false;
+    }
+    
     return true;
   });
 
@@ -165,21 +167,48 @@ function filterDrivers() {
   }
 }
 
-function resetFilters() {
-  ['f-search', 'f-school', 'f-route', 'f-dag', 'f-prijs'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
+function updateOptions() {
+  const category = document.getElementById('category')?.value || '';
+  const schoolSelect = document.getElementById('f-school');
+  if (!schoolSelect) return;
+
+  const options = schoolSelect.querySelectorAll('option');
+
+  options.forEach(opt => {
+    const optCat = opt.getAttribute('data-category');
+    if (!category || !optCat || optCat === category) {
+      opt.style.display = '';
+    } else {
+      opt.style.display = 'none';
+    }
   });
+
+  const selectedOpt = schoolSelect.options[schoolSelect.selectedIndex];
+  if (selectedOpt && selectedOpt.style.display === 'none') {
+    schoolSelect.value = '';
+  }
+
   filterDrivers();
 }
 
-function updateOptions() {
-  const selectedCategory = document.getElementById('category')?.value || '';
-  document.querySelectorAll('.items option').forEach(option => {
-    const cat = option.getAttribute('data-category');
-    if (!cat) return;
-    option.style.display = (cat === selectedCategory || selectedCategory === '') ? '' : 'none';
-  });
+function resetFilters() {
+  const search = document.getElementById('f-search');
+  const cat = document.getElementById('category');
+  const school = document.getElementById('f-school');
+  const route = document.getElementById('f-route');
+  const dag = document.getElementById('f-dag');
+
+  if (search) search.value = '';
+  if (cat) cat.value = '';
+  if (school) school.value = '';
+  if (route) route.value = '';
+  if (dag) dag.value = '';
+
+  if (school) {
+    school.querySelectorAll('option').forEach(opt => opt.style.display = '');
+  }
+
+  filterDrivers();
 }
 
 // ── 6. MODAL ─────────────────────────────────────────────────
@@ -252,9 +281,7 @@ function closeModalDirect() {
   document.body.style.overflow = '';
 }
 
-// ── 7. REGISTRATION FORM ─────────────────────────────────────
-const registeredDrivers = [];
-let nextId = 100;
+// ── 7. REGISTRATION FORM & API CONNECTIONS ───────────────────
 let fotoFile = null;
 
 function handlePhotoPreview(input) {
@@ -263,6 +290,14 @@ function handlePhotoPreview(input) {
   if (!preview) return;
 
   if (fotoFile) {
+    if (fotoFile.size > 10 * 1024 * 1024) {
+      alert("Deze foto is te groot. Kies een afbeelding kleiner dan 10MB.");
+      input.value = ""; 
+      fotoFile = null;
+      preview.style.display = 'none';
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = e => {
       preview.style.display = 'block';
@@ -280,15 +315,14 @@ function updateCharCount() {
   if (count) count.textContent = val;
 }
 
-function toggleDay(el) {
-  el.classList.toggle('on');
-}
+// ── SUBMIT REGISTRATION TO BACKEND API ──
+function submitRegistration(event) {
+  if(event) event.preventDefault(); 
 
-function submitRegistration() {
-  const voornaam  = document.getElementById('r-voornaam')?.value.trim() || '';
+  const voornaam   = document.getElementById('r-voornaam')?.value.trim() || '';
   const achternaam = document.getElementById('r-achternaam')?.value.trim() || '';
-  const email     = document.getElementById('r-email')?.value.trim() || '';
-  const akkoord   = document.getElementById('r-akkoord')?.checked || false;
+  const email      = document.getElementById('r-email')?.value.trim() || '';
+  const akkoord    = document.getElementById('r-akkoord')?.checked || false;
 
   if (!voornaam || !achternaam || !email) {
     alert('Vul alle verplichte velden in (naam en e-mail).');
@@ -303,63 +337,144 @@ function submitRegistration() {
     return;
   }
 
-  const dagen = [...document.querySelectorAll('#days-grid .day-toggle.on')]
-    .map(el => el.textContent);
+  // Collect the selected system filter day value
+  const dayValue = document.getElementById('f-dag')?.value || 'Ma';
 
   const reader = new FileReader();
-  reader.onload = e => {
-    const newDriver = {
-      id:       nextId++,
-      naam:     `${voornaam} ${achternaam}`,
-      initials: (voornaam[0] + achternaam[0]).toUpperCase(),
-      foto:     e.target.result,
-      erv:      parseInt(document.getElementById('r-ervaring')?.value) || 1,
-      route:    document.getElementById('r-route')?.value || 'Centrum',
-      school:   document.getElementById('r-school')?.value || '',
-      tijdOch:  document.getElementById('r-tijd-och')?.value || '07:30',
-      tijdMid:  document.getElementById('r-tijd-mid')?.value || '14:30',
-      dagen:    dagen.length > 0 ? dagen : ['Ma', 'Di', 'Wo', 'Do', 'Vr'],
+  reader.onload = async (e) => {
+    const base64Image = e.target.result;
+
+    const registrationData = {
+      voornaam: voornaam,
+      achternaam: achternaam,
+      email: email,
+      telefoon: document.getElementById('r-telefoon')?.value.trim() || '',
+      profile_photo_url: base64Image,
+      rijbewijs: document.getElementById('r-rijbewijs-type')?.value || 'B', 
+      ervaring: parseInt(document.getElementById('r-ervaring')?.value) || 1,
       voertuig: document.getElementById('r-voertuig')?.value || 'Minibus',
       capaciteit: parseInt(document.getElementById('r-capaciteit')?.value) || 8,
-      kenteken: document.getElementById('r-kenteken')?.value || 'N.v.t.',
-      extra:    document.getElementById('r-extra')?.value || 'Geen',
-      prijs:    parseInt(document.getElementById('r-prijs')?.value) || 150,
-      terug:    document.getElementById('r-terug')?.value || 'Heen & terug',
-      bio:      document.getElementById('r-bio')?.value || 'Betrouwbaar schoolvervoer.',
-      rating:   5.0,
-      reviews:  0,
+      kentekenplaat: document.getElementById('r-kenteken')?.value || 'N.v.t.',
+      bouwjaar: parseInt(document.getElementById('r-bouwjaar')?.value) || null,
+      route: document.getElementById('r-route')?.value || 'Centrum',
+      school: document.getElementById('r-school')?.value || '',
+      tijd_och: document.getElementById('r-tijd-och')?.value || '07:30',
+      tijd_mid: document.getElementById('r-tijd-mid')?.value || '14:30',
+      dag: dayValue,
+      prijs: parseInt(document.getElementById('r-prijs')?.value) || 150,
+      op_afhaal: document.getElementById('r-terug')?.value || 'Heen & terug'
     };
 
-    registeredDrivers.push(newDriver);
-    allDrivers.push(newDriver);
-    filterDrivers();
+    try {
+      const form = document.getElementById('register-form');
+      if (form) form.style.pointerEvents = 'none';
 
-    // Show success
-    const banner = document.getElementById('success-banner');
-    const form   = document.getElementById('register-form');
-    if (banner) banner.classList.add('show');
-    if (form)   { form.style.opacity = '0.5'; form.style.pointerEvents = 'none'; }
+      const response = await fetch(`${API_BASE_URL}/api/register-driver`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(registrationData)
+      });
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        const newDriver = {
+          id: result.user_id,
+          naam: `${voornaam} ${achternaam}`,
+          foto: base64Image,
+          erv: registrationData.ervaring,
+          route: registrationData.route,
+          school: registrationData.school,
+          tijdOch: registrationData.tijd_och,
+          tijdMid: registrationData.tijd_mid,
+          dagen: [dayValue],
+          voertuig: registrationData.voertuig,
+          capaciteit: registrationData.capaciteit,
+          kenteken: registrationData.kentekenplaat,
+          prijs: registrationData.prijs,
+          bio: document.getElementById('r-bio')?.value || 'Betrouwbaar schoolvervoer.',
+          rating: 5.0,
+          reviews: 0,
+          extra: registrationData.op_afhaal
+        };
+
+        allDrivers.push(newDriver);
+        filterDrivers();
+
+        const banner = document.getElementById('success-banner');
+        if (banner) banner.style.display = 'flex'; 
+        if (form) {
+          form.reset();
+          form.style.opacity = '0.5';
+        }
+        const preview = document.getElementById('photo-preview');
+        if (preview) preview.style.display = 'none';
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        throw new Error(result.error || 'Server connection failed.');
+      }
+    } catch (error) {
+      console.error('API Error details:', error);
+      alert('Er is een fout opgetreden bij het registreren.');
+      const form = document.getElementById('register-form');
+      if (form) form.style.pointerEvents = 'auto';
+    }
   };
-
   reader.readAsDataURL(fotoFile);
 }
 
-function submitContactForm(e) {
-  e.preventDefault();
-  const naam    = document.getElementById('contact-name')?.value.trim();
-  const email   = document.getElementById('contact-email')?.value.trim();
-  const message = document.getElementById('contact-message')?.value.trim();
+// ── SUBMIT CONTACT VIA NATIVE FETCH ROUTE ──
+async function submitContactForm(event) {
+  event.preventDefault();
 
-  if (!naam || !email || !message) {
+  const data = {
+    name: document.getElementById("contact-name")?.value.trim() || "",
+    achternaam: document.getElementById("contact-achternaam")?.value.trim() || "",
+    email: document.getElementById("contact-email")?.value.trim() || "",
+    subject: document.getElementById("contact-subject")?.value.trim() || "No Subject",
+    message: document.getElementById("contact-message")?.value.trim() || ""
+  };
+
+  if (!data.name || !data.email || !data.message) {
     alert('Vul alle verplichte velden in.');
     return;
   }
 
-  alert(`Bedankt, ${naam}! Uw bericht is verstuurd. Wij nemen zo spoedig mogelijk contact met u op.`);
-  e.target.reset();
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      alert("Bericht succesvol verzonden!");
+      event.target.reset();
+    } else {
+      alert("Er ging iets mis bij de verwerking van het bericht.");
+    }
+  } catch (err) {
+    console.error("Contact send failed:", err);
+    alert("Kon geen verbinding maken met de server.");
+  }
 }
+
+// Explicit Window Bindings for HTML Context Lifecycle Execution
+window.showPage = showPage;
+window.filterDrivers = filterDrivers;
+window.updateOptions = updateOptions;
+window.resetFilters = resetFilters;
+window.submitContactForm = submitContactForm;
+window.submitRegistration = submitRegistration;
+window.handlePhotoPreview = handlePhotoPreview;
+window.updateCharCount = updateCharCount;
+window.toggleFaq = toggleFaq;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.closeModalDirect = closeModalDirect;
 
 // ── 8. SCROLL REVEAL TRANSITIONS ─────────────────────────────
 function checkReveal() {
@@ -375,7 +490,6 @@ function checkReveal() {
 }
 
 function initScrollReveal() {
-  // Mark all section children as reveal elements
   document.querySelectorAll('.section-header, .driver-card, .faq-item, .form-section, .contact-info-card, .contact-form-card, .sidebar-card, .form-card').forEach((el, i) => {
     el.classList.add('reveal');
     if (i % 4 === 1) el.classList.add('reveal-delay-1');
@@ -388,12 +502,42 @@ function initScrollReveal() {
 }
 
 // ── 9. INIT ───────────────────────────────────────────────────
+async function fetchLiveDrivers() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/drivers`);
+    if(res.ok) {
+      const rawDrivers = await res.json();
+
+      allDrivers = rawDrivers.map(d => ({
+        id: d.user_id,
+        naam: `${d.voornaam} ${d.achternaam}`,
+        foto: d.profile_photo_url,
+        erv: d.ervaring,
+        route: d.route,
+        school: d.school,
+        tijdOch: d.tijd_och,
+        tijdMid: d.tijd_mid,
+        voertuig: d.voertuig,
+        capaciteit: d.capaciteit,
+        kenteken: d.kentekenplaat,
+        prijs: d.prijs,
+        extra: d.op_afhaal,
+        rating: 5,
+        reviews: 0,
+        bio: "Professionele schoolchauffeur.",
+        dagen: d.dag ? d.dag.split(",") : []
+      }));
+      filterDrivers();
+    }
+  } catch (err) {
+    console.error("Could not fetch database drivers:", err);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
   initHamburger();
   initScrollReveal();
-  filterDrivers();
-
-  // Default to home page
+  fetchLiveDrivers(); 
   showPage('home');
 });

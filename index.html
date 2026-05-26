@@ -5,21 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BusConnect — Suriname's Schoolbus Platform</title>
   <link rel="icon" href="img/buslogo.png" />
-  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="main.css" />
 </head>
 <body>
 
-  <!-- ══════════════════════════════════════
-       NAVIGATION
-  ══════════════════════════════════════ -->
   <nav>
-    <!-- Logo -->
     <a class="nav-logo" href="#" onclick="showPage('home'); return false;">
       <img src="img/buslogo.png" alt="BusConnect logo" />
       🚌 Bus<span>Connect</span>
     </a>
 
-    <!-- Center nav pills -->
     <div class="nav-center">
       <div class="nav-pills">
         <button class="nav-pill active" data-page="home"    onclick="showPage('home')">Home</button>
@@ -30,9 +25,7 @@
       </div>
     </div>
 
-    <!-- Right: theme toggle + hamburger -->
     <div class="nav-right">
-      <!-- Dark/Light mode toggle -->
       <div class="theme-toggle" id="theme-toggle" title="Wissel donker/licht">
         <span class="theme-toggle-label">☀️</span>
         <div class="toggle-track">
@@ -41,14 +34,12 @@
         <span class="theme-toggle-label">🌙</span>
       </div>
 
-      <!-- Mobile hamburger -->
       <button class="nav__hamburger" id="hamburger" aria-label="Menu openen">
         <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
 
-  <!-- Mobile menu -->
   <div class="mobile-menu" id="mobileMenu">
     <a href="#" onclick="showPage('home');    return false;">🏠 Home</a>
     <a href="#" onclick="showPage('about');   return false;">ℹ️ Over Ons</a>
@@ -57,13 +48,7 @@
     <a href="#" onclick="showPage('signin');  return false;">🚌 Registreer als Chauffeur</a>
   </div>
 
-
-  <!-- ══════════════════════════════════════
-       PAGE: HOME
-  ══════════════════════════════════════ -->
   <div id="page-home" class="page active">
-
-    <!-- Hero -->
     <div class="hero">
       <img src="img/buslogo.png" alt="BusConnect logo" class="hero-logo" />
       <div class="hero-tag">🇸🇷 Suriname's #1 Schoolbus Platform</div>
@@ -79,19 +64,17 @@
       </div>
     </div>
 
-    <!-- Filter + Driver Grid -->
     <section class="section">
       <div class="container" id="zoek">
-
         <div class="filter-bar reveal">
           <h3>🔎 Filter op uw wensen</h3>
           <div class="filter-grid">
             <div class="field">
-              <label>Zoek op naam / route</label>
+              <label for="f-search">Zoek op naam / route</label>
               <input type="text" id="f-search" placeholder="bijv. Noord, Maria…" oninput="filterDrivers()" />
             </div>
             <div class="field">
-              <label>Onderwijsniveau</label>
+              <label for="category">Onderwijsniveau</label>
               <select id="category" onchange="updateOptions()">
                 <option value="">— Alle niveaus —</option>
                 <option value="GLO">GLO</option>
@@ -99,7 +82,7 @@
               </select>
             </div>
             <div class="field">
-              <label>School</label>
+              <label for="f-school">School</label>
               <select id="f-school" class="items">
                 <option value="">— Alle scholen —</option>
                 <option value="O.S. Flora"          data-category="GLO">O.S. Flora</option>
@@ -110,7 +93,7 @@
               </select>
             </div>
             <div class="field">
-              <label>Wijk / Route</label>
+              <label for="f-route">Wijk / Route</label>
               <select id="f-route">
                 <option value="">— Alle routes —</option>
                 <option value="Noord">Noord</option>
@@ -121,7 +104,7 @@
               </select>
             </div>
             <div class="field">
-              <label>Beschikbaarheid</label>
+              <label for="f-dag">Beschikbaarheid</label>
               <select id="f-dag">
                 <option value="">— Alle dagen —</option>
                 <option value="Ma">Maandag</option>
@@ -143,24 +126,16 @@
           <p>Klik op een kaart om meer details te bekijken en contact op te nemen.</p>
         </div>
 
-        <div class="driver-grid" id="driver-grid">
-          <!-- Driver cards worden hier geladen via main.js -->
-        </div>
+        <div class="driver-grid" id="driver-grid"></div>
 
         <div class="empty-state" id="empty-state" style="display:none;">
           <span class="emoji">🔍</span>
           <p>Geen chauffeurs gevonden. Pas uw filters aan en probeer opnieuw.</p>
         </div>
-
       </div>
     </section>
+  </div>
 
-  </div><!-- /page-home -->
-
-
-  <!-- ══════════════════════════════════════
-       PAGE: OVER ONS
-  ══════════════════════════════════════ -->
   <div id="page-about" class="page">
     <section class="section">
       <div class="container">
@@ -182,12 +157,8 @@
         </div>
       </div>
     </section>
-  </div><!-- /page-about -->
+  </div>
 
-
-  <!-- ══════════════════════════════════════
-       PAGE: CONTACT
-  ══════════════════════════════════════ -->
   <div id="page-contact" class="page">
     <section class="section">
       <div class="container">
@@ -198,7 +169,6 @@
         </div>
 
         <div class="contact-grid">
-          <!-- Info -->
           <div class="contact-info-card reveal">
             <div class="contact-info-row">
               <div class="contact-info-icon">📧</div>
@@ -222,42 +192,36 @@
               </div>
             </div>
             <div class="contact-info-row">
-              <div class="contact-info-icon">🕐</div>
+              <div class="contact-info-icon">1️⃣</div>
               <div class="contact-info-text">
                 <strong>Bereikbaar</strong>
                 Ma–Vr: 08:00 – 16:00 (SRT)
               </div>
             </div>
-            <div style="margin-top:1.5rem;padding:1.25rem;background:var(--accent-light);border-radius:var(--radius);font-size:0.85rem;color:var(--text-muted);">
-              <strong style="display:block;color:var(--accent-dark);margin-bottom:0.4rem;">Project door</strong>
-              The Element 3 — UNASAT<br/>
-              Studenten: Basedie · Debi-tewari · Kasandinomo · Dayen · Dipotaroeno
-            </div>
           </div>
 
-          <!-- Form -->
           <div class="contact-form-card reveal reveal-delay-1">
             <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:1.5rem;">Stuur een bericht</h3>
             <form id="contact-form" onsubmit="submitContactForm(event)">
               <div class="form-grid">
                 <div class="form-field">
-                  <label>Voornaam *</label>
+                  <label for="contact-name">Voornaam *</label>
                   <input type="text" id="contact-name" placeholder="Jan" required />
                 </div>
                 <div class="form-field">
-                  <label>Achternaam *</label>
-                  <input type="text" id="contact-achternaam" placeholder="Doe" />
+                  <label for="contact-achternaam">Achternaam *</label>
+                  <input type="text" id="contact-achternaam" placeholder="Doe" required />
                 </div>
                 <div class="form-field full">
-                  <label>E-mailadres *</label>
+                  <label for="contact-email">E-mailadres *</label>
                   <input type="email" id="contact-email" placeholder="jan@email.com" required />
                 </div>
                 <div class="form-field full">
-                  <label>Onderwerp</label>
+                  <label for="contact-subject">Onderwerp</label>
                   <input type="text" id="contact-subject" placeholder="Vraag over een chauffeur" />
                 </div>
                 <div class="form-field full">
-                  <label>Bericht *</label>
+                  <label for="contact-message">Bericht *</label>
                   <textarea id="contact-message" rows="5" placeholder="Schrijf uw bericht hier…" required></textarea>
                 </div>
                 <div class="form-field full">
@@ -267,155 +231,49 @@
             </form>
           </div>
         </div>
-
       </div>
     </section>
-  </div><!-- /page-contact -->
+  </div>
 
-
-  <!-- ══════════════════════════════════════
-       PAGE: FAQ
-  ══════════════════════════════════════ -->
   <div id="page-faq" class="page">
     <section class="section">
       <div class="container" style="max-width:720px;">
-
         <div class="section-header reveal">
           <span class="section-label">Veelgestelde vragen</span>
           <h2>FAQ</h2>
           <p>Alles wat u wilt weten over BusConnect.</p>
         </div>
 
-        <!-- Voor ouders -->
         <div style="margin-bottom:2.5rem;" class="reveal">
           <span class="section-label">Voor Ouders</span>
           <div style="margin-top:1rem;">
-
             <div class="faq-item">
               <div class="faq-question" onclick="toggleFaq(this)">
                 Kan ik chauffeurs bekijken zonder een account?
                 <div class="faq-icon">+</div>
               </div>
-              <div class="faq-answer">Ja, ouders kunnen alle beschikbare chauffeurprofielen bekijken, inclusief routes en beoordelingen, zonder account. U hoeft zich alleen te registreren als u een aanvraag wilt indienen.</div>
+              <div class="faq-answer">Ja, ouders kunnen alle beschikbare Chauffeurprofielen bekijken, inclusief routes, zonder account.</div>
             </div>
-
             <div class="faq-item">
               <div class="faq-question" onclick="toggleFaq(this)">
                 Hoe werkt de live GPS tracker?
                 <div class="faq-icon">+</div>
               </div>
-              <div class="faq-answer">Wanneer een chauffeur GPS-toegang heeft ingeschakeld, verschijnt zijn locatie real-time op een Google Maps kaart. U kunt de bus volgen en ontvangt een melding wanneer de bus in uw buurt aankomt.</div>
+              <div class="faq-answer">Wanneer een chauffeur tracking inschakelt, verschijnt zijn locatie real-time op de kaart.</div>
             </div>
-
-            <div class="faq-item">
-              <div class="faq-question" onclick="toggleFaq(this)">
-                Hoe neem ik contact op met een chauffeur?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">Op het profiel van elke chauffeur vindt u de contactinformatie. U kunt direct via de website een aanvraag indienen, waarna u een e-mailbevestiging ontvangt.</div>
-            </div>
-
-            <div class="faq-item">
-              <div class="faq-question" onclick="toggleFaq(this)">
-                Ontvang ik een bevestiging per e-mail?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">Ja. Zodra u een aanvraag heeft ingediend en de chauffeur deze accepteert, ontvangt u automatisch een bevestigingsmail.</div>
-            </div>
-
-            <div class="faq-item">
-              <div class="faq-question" onclick="toggleFaq(this)">
-                Hoe zoek ik op route of locatie?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">Op de homepagina kunt u filteren op wijk, school en schoolroute. Typ uw locatie in de zoekbalk en de resultaten worden automatisch gefilterd.</div>
-            </div>
-
           </div>
         </div>
 
-        <!-- Voor chauffeurs -->
-        <div style="margin-bottom:2.5rem;" class="reveal reveal-delay-1">
-          <span class="section-label">Voor Chauffeurs</span>
-          <div style="margin-top:1rem;">
-
-            <div class="faq-item">
-              <div class="faq-question" onclick="toggleFaq(this)">
-                Hoe registreer ik mij als chauffeur?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">Klik op "Registreer" in de navigatie. Vul uw persoonlijke gegevens in, voeg uw rijbewijsinformatie en routes toe, en upload een verplichte profielfoto. Na registratie is uw profiel zichtbaar voor ouders.</div>
-            </div>
-
-            <div class="faq-item">
-              <div class="faq-question" onclick="toggleFaq(this)">
-                Is een profielfoto verplicht?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">Ja, een profielfoto is verplicht. Dit vergroot het vertrouwen van ouders in uw dienst en maakt uw profiel herkenbaarder.</div>
-            </div>
-
-            <div class="faq-item">
-              <div class="faq-question" onclick="toggleFaq(this)">
-                Hoe schakel ik GPS tracking in?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">Log in op uw dashboard en ga naar "GPS Tracker". Klik op "Start Tracking" en geef uw browser toestemming voor locatietoegang. Uw locatie wordt dan real-time gedeeld met ouders.</div>
-            </div>
-
-            <div class="faq-item">
-              <div class="faq-question" onclick="toggleFaq(this)">
-                Kan ik mijn profiel verwijderen?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">Ja, in uw dashboard onder "Mijn Profiel" vindt u de optie om uw profiel te verwijderen. Let op: dit is permanent.</div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Technisch -->
-        <div style="margin-bottom:2.5rem;" class="reveal reveal-delay-2">
-          <span class="section-label">Technisch</span>
-          <div style="margin-top:1rem;">
-
-            <div class="faq-item">
-              <div class="faq-question" onclick="toggleFaq(this)">
-                Is mijn persoonlijke data veilig?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">Ja. Alle gegevens worden veilig opgeslagen in een MySQL database. Wachtwoorden zijn versleuteld en persoonlijke informatie is nooit zichtbaar voor onbevoegden.</div>
-            </div>
-
-            <div class="faq-item">
-              <div class="faq-question" onclick="toggleFaq(this)">
-                Werkt BusConnect op mobiele telefoons?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">Ja, BusConnect is volledig responsief en werkt op alle moderne smartphones, tablets en computers. Zowel Android als iOS worden ondersteund.</div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- CTA -->
         <div style="text-align:center;margin-top:2.5rem;padding:2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);" class="reveal reveal-delay-3">
-          <h3 style="font-family:var(--font-display);font-size:1rem;margin-bottom:0.5rem;">Nog een vraag?</h3>
-          <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:1.25rem;">Wij helpen u graag persoonlijk verder.</p>
+          <h3>Nog een vraag?</h3>
+          <p style="margin-bottom:1.25rem;">Wij helpen u graag persoonlijk verder.</p>
           <button class="btn btn-amber" onclick="showPage('contact')">📧 Neem Contact Op</button>
         </div>
-
       </div>
     </section>
-  </div><!-- /page-faq -->
+  </div>
 
-
-  <!-- ══════════════════════════════════════
-       PAGE: REGISTREER ALS CHAUFFEUR
-  ══════════════════════════════════════ -->
   <div id="page-signin" class="page">
-
-    <!-- Sub-hero -->
     <div class="hero">
       <div class="hero-tag">🚌 Word Chauffeur</div>
       <h1>Registreer als <span>betrouwbare</span> schoolbuschauffeur</h1>
@@ -425,12 +283,9 @@
     <section class="section">
       <div class="container">
         <div class="register-layout">
-
-          <!-- Sidebar -->
           <div class="register-sidebar">
             <div class="sidebar-card reveal">
               <h3>Hoe werkt het?</h3>
-              <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem;">In een paar stappen staat u online.</p>
               <div class="sidebar-steps">
                 <div class="step-item">
                   <div class="step-num">1</div>
@@ -440,22 +295,12 @@
                   <div class="step-num">2</div>
                   <div class="step-text"><strong>Stel uw route in</strong>Kies de wijk, school en tijden.</div>
                 </div>
-                <div class="step-item">
-                  <div class="step-num">3</div>
-                  <div class="step-text"><strong>Bepaal uw tarief</strong>U bepaalt zelf wat u vraagt per maand.</div>
-                </div>
-                <div class="step-item">
-                  <div class="step-num">4</div>
-                  <div class="step-text"><strong>Online!</strong>Ouders kunnen u direct vinden en contact opnemen.</div>
-                </div>
               </div>
             </div>
           </div>
 
-          <!-- Form -->
           <div>
-            <!-- Success banner -->
-            <div class="success-banner" id="success-banner">
+            <div class="success-banner" id="success-banner" style="display: none;">
               <div class="success-icon">✅</div>
               <div class="success-text">
                 <h4>Registratie gelukt!</h4>
@@ -463,77 +308,74 @@
               </div>
             </div>
 
-            <div class="form-card reveal reveal-delay-1" id="register-form">
-
-              <!-- Persoonlijke gegevens -->
+            <form id="register-form" onsubmit="submitRegistration(event)">
               <div class="form-section">
                 <div class="form-section-title">👤 Persoonlijke gegevens <span>Verplicht</span></div>
                 <div class="form-grid">
                   <div class="form-field">
-                    <label>Voornaam</label>
-                    <input type="text" id="r-voornaam" placeholder="Jan" />
+                    <label for="r-voornaam">Voornaam *</label>
+                    <input type="text" id="r-voornaam" placeholder="Jan" required />
                   </div>
                   <div class="form-field">
-                    <label>Achternaam</label>
-                    <input type="text" id="r-achternaam" placeholder="de Vries" />
+                    <label for="r-achternaam">Achternaam *</label>
+                    <input type="text" id="r-achternaam" placeholder="de Vries" required />
                   </div>
                   <div class="form-field">
-                    <label>E-mailadres</label>
-                    <input type="email" id="r-email" placeholder="jan@email.com" />
+                    <label for="r-email">E-mailadres *</label>
+                    <input type="email" id="r-email" placeholder="jan@email.com" required />
                   </div>
                   <div class="form-field">
-                    <label>Telefoonnummer</label>
-                    <input type="tel" id="r-telefoon" placeholder="+597 000 0000" />
+                    <label for="r-telefoon">Telefoonnummer *</label>
+                    <input type="tel" id="r-telefoon" placeholder="+597 000 0000" required />
                   </div>
                   <div class="form-field full">
-                    <label>Profielfoto (verplicht)</label>
-                    <input type="file" id="r-foto" accept="image/png, image/jpeg" onchange="handlePhotoPreview(this)" />
-                    <small>Upload een duidelijke, professionele profielfoto. Dit vergroot het vertrouwen van ouders.</small>
+                    <label for="r-foto">Profielfoto (verplicht) *</label>
+                    <input type="file" id="r-foto" accept="image/png, image/jpeg" onchange="handlePhotoPreview(this)" required />
+                    <small>Upload een duidelijke, professionele profielfoto.</small>
                     <div class="photo-preview" id="photo-preview" style="margin-top:0.75rem;display:none;">
                       <img src="" alt="Profielfoto preview" />
                     </div>
                   </div>
                   <div class="form-field full">
-                    <label class="checkbox-label">
-                      <input type="checkbox" id="r-show-contact" />
+                    <label class="checkbox-label" for="r-show-contact">
+                      <input type="checkbox" id="r-show-contact" checked />
                       Contactinformatie zichtbaar voor ouders
                     </label>
                   </div>
                   <div class="form-field full">
-                    <label>Korte introductie</label>
-                    <textarea id="r-bio" rows="3" maxlength="250" placeholder="Vertel ouders iets over uzelf en uw ervaring…" oninput="updateCharCount()"></textarea>
+                    <label for="r-bio">Korte introductie *</label>
+                    <textarea id="r-bio" rows="3" maxlength="250" placeholder="Vertel ouders iets over uzelf..." oninput="updateCharCount()" required></textarea>
                     <div class="char-count"><span id="char-count">0</span>/250</div>
                   </div>
                 </div>
               </div>
 
-              <!-- Voertuig -->
               <div class="form-section">
                 <div class="form-section-title">🚌 Voertuig & capaciteit <span>Verplicht</span></div>
                 <div class="form-grid cols-3">
                   <div class="form-field">
-                    <label>Type voertuig</label>
+                    <label for="r-voertuig">Type voertuig</label>
                     <select id="r-voertuig">
-                      <option>Minibus (6–9 pers.)</option>
-                      <option>Schoolbus (10–20 pers.)</option>
-                      <option>Grote bus (20+ pers.)</option>
-                      <option>Personenauto</option>
+                      <option value="Minibus (6-9 pers.)">Minibus (6–9 pers.)</option>
+                      <option value="Schoolbus (10-20 pers.)">Schoolbus (10–20 pers.)</option>
+                      <option value="Grote bus (20+ pers.)">Grote bus (20+ pers.)</option>
+                      <option value="Personenauto">Personenauto</option>
                     </select>
                   </div>
                   <div class="form-field">
-                    <label>Max. capaciteit</label>
-                    <input type="number" id="r-capaciteit" placeholder="8" min="1" max="50" />
+                    <label for="r-capaciteit">Max. capaciteit *</label>
+                    <input type="number" id="r-capaciteit" placeholder="8" min="1" max="50" required />
                   </div>
                   <div class="form-field">
-                    <label>Ervaringsjaren</label>
-                    <input type="number" id="r-ervaring" placeholder="5" min="0" />
+                    <label for="r-ervaring">Ervaringsjaren *</label>
+                    <input type="number" id="r-ervaring" placeholder="5" min="0" required />
                   </div>
                   <div class="form-field">
-                    <label>Kenteken</label>
-                    <input type="text" id="r-kenteken" placeholder="AB-123-C" />
+                    <label for="r-kenteken">Kenteken *</label>
+                    <input type="text" id="r-kenteken" placeholder="AB-123-C" required />
                   </div>
                   <div class="form-field">
-                    <label>Rijbewijs type</label>
+                    <label for="r-rijbewijs-type">Rijbewijs type</label>
                     <select id="r-rijbewijs-type">
                       <option>B</option>
                       <option>B+E</option>
@@ -542,26 +384,17 @@
                     </select>
                   </div>
                   <div class="form-field">
-                    <label>Bouwjaar voertuig</label>
-                    <input type="number" id="r-bouwjaar" placeholder="2018" min="1990" max="2035" />
-                  </div>
-                  <div class="form-field">
-                    <label>Extra's</label>
-                    <select id="r-extra">
-                      <option>Geen</option>
-                      <option>Airco</option>
-                      <option>Rolstoeltoegankelijk</option>
-                    </select>
+                    <label for="r-bouwjaar">Bouwjaar voertuig *</label>
+                    <input type="number" id="r-bouwjaar" placeholder="2018" min="1990" max="2035" required />
                   </div>
                 </div>
               </div>
 
-              <!-- Route & school -->
               <div class="form-section">
                 <div class="form-section-title">🗺️ Route & school <span>Verplicht</span></div>
                 <div class="form-grid">
                   <div class="form-field">
-                    <label>Wijk / route</label>
+                    <label for="r-route">Wijk / route</label>
                     <select id="r-route">
                       <option>Noord</option>
                       <option>Zuid</option>
@@ -571,7 +404,7 @@
                     </select>
                   </div>
                   <div class="form-field">
-                    <label>Aangesloten school</label>
+                    <label for="r-school">Aangesloten school</label>
                     <select id="r-school">
                       <option>O.S. Flora</option>
                       <option>O.S. Welgelegen</option>
@@ -581,67 +414,49 @@
                     </select>
                   </div>
                   <div class="form-field">
-                    <label>Vertrektijd ochtend</label>
-                    <input type="time" id="r-tijd-och" value="07:30" />
+                    <label for="r-tijd-och">Vertrektijd ochtend</label>
+                    <input type="time" id="r-tijd-och" value="07:30" required />
                   </div>
                   <div class="form-field">
-                    <label>Vertrektijd middag</label>
-                    <input type="time" id="r-tijd-mid" value="14:45" />
-                  </div>
-                </div>
-                <div style="margin-top:1rem;">
-                  <label style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);display:block;margin-bottom:0.6rem;">Beschikbare dagen</label>
-                  <div class="days-grid" id="days-grid">
-                    <div class="day-toggle on" onclick="toggleDay(this)">Ma</div>
-                    <div class="day-toggle on" onclick="toggleDay(this)">Di</div>
-                    <div class="day-toggle on" onclick="toggleDay(this)">Wo</div>
-                    <div class="day-toggle on" onclick="toggleDay(this)">Do</div>
-                    <div class="day-toggle on" onclick="toggleDay(this)">Vr</div>
+                    <label for="r-tijd-mid">Vertrektijd middag</label>
+                    <input type="time" id="r-tijd-mid" value="14:45" required />
                   </div>
                 </div>
               </div>
 
-              <!-- Tarief -->
               <div class="form-section">
                 <div class="form-section-title">💰 Tarief</div>
                 <div class="form-grid cols-3">
                   <div class="form-field">
-                    <label>Prijs per maand (SRD)</label>
-                    <input type="number" id="r-prijs" placeholder="150" min="0" />
+                    <label for="r-prijs">Prijs per maand (SRD) *</label>
+                    <input type="number" id="r-prijs" placeholder="150" min="0" required />
                   </div>
                   <div class="form-field">
-                    <label>Inclusief terug?</label>
+                    <label for="r-terug">Inclusief terug?</label>
                     <select id="r-terug">
-                      <option>Heen &amp; terug</option>
-                      <option>Alleen heen</option>
-                      <option>Alleen terug</option>
+                      <option value="Heen & terug">Heen &amp; terug</option>
+                      <option value="Alleen heen">Alleen heen</option>
+                      <option value="Alleen terug">Alleen terug</option>
                     </select>
                   </div>
                 </div>
               </div>
 
-              <!-- Akkoord + Submit -->
               <div style="display:flex;gap:0.75rem;align-items:flex-start;padding:1rem;background:var(--accent-light);border-radius:var(--radius);margin-bottom:1.5rem;font-size:0.85rem;color:var(--text-muted);">
-                <input type="checkbox" id="r-akkoord" style="margin-top:3px;width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;" />
-                <label for="r-akkoord">Ik verklaar dat ik beschik over een geldig rijbewijs, en dat alle opgegeven informatie correct is. Ik ga akkoord met de <u style="cursor:pointer;color:var(--accent-dark);">gebruiksvoorwaarden</u> van BusConnect.</label>
+                <input type="checkbox" id="r-akkoord" style="margin-top:3px;width:16px;height:16px;flex-shrink:0;" required />
+                <label for="r-akkoord">Ik verklaar dat ik beschik over een geldig rijbewijs, en dat alle opgegeven informatie correct is.</label>
               </div>
 
-              <button class="btn btn-amber btn-full" onclick="submitRegistration()" style="font-size:1rem;padding:0.9rem;border-radius:var(--radius);">
+              <button type="submit" class="btn btn-amber btn-full" style="font-size:1rem;padding:0.9rem;border-radius:var(--radius);">
                 🚌 Registreer als chauffeur
               </button>
-
-            </div>
+            </form>
           </div>
-
         </div>
       </div>
     </section>
-  </div><!-- /page-signin -->
+  </div>
 
-
-  <!-- ══════════════════════════════════════
-       MODAL OVERLAY
-  ══════════════════════════════════════ -->
   <div class="modal-overlay" id="modal" onclick="closeModal(event)">
     <div class="modal">
       <div class="modal-header">
@@ -653,10 +468,6 @@
     </div>
   </div>
 
-
-  <!-- ══════════════════════════════════════
-       FOOTER
-  ══════════════════════════════════════ -->
   <footer class="footer">
     <div class="container">
       <div class="footer__bottom">
@@ -666,8 +477,6 @@
     </div>
   </footer>
 
-  <!-- JS last, separated from CSS -->
-  <script src="js/main.js"></script>
-
+  <script type="module" src="main.js"></script>
 </body>
 </html>
