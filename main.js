@@ -6,6 +6,9 @@
 
 'use strict';
 
+// Define your backend base URL
+const API_BASE_URL = 'http://localhost:3000'; 
+
 // ── 1. THEME TOGGLE (Dark / Light Mode) ──────────────────────
 function initThemeToggle() {
   const toggle = document.getElementById('theme-toggle');
@@ -32,26 +35,25 @@ function applyTheme(theme) {
 
 // ── 2. PAGE NAVIGATION (SPA) ─────────────────────────────────
 function showPage(page) {
-  // Hide all pages
   document.querySelectorAll('.page').forEach(p => {
     p.classList.remove('active');
   });
 
-  // Show target page
   const target = document.getElementById('page-' + page);
   if (target) {
     target.classList.add('active');
-    // Trigger scroll reveals on the new page
     setTimeout(checkReveal, 50);
   }
 
-  // Update nav pill active state
   document.querySelectorAll('.nav-pill').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('data-page') === page);
   });
 
-  // Scroll to top smoothly
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (page === 'tracker') {
+    initTrackerPage();
+  }
 }
 
 // ── 3. HAMBURGER MENU (mobile) ───────────────────────────────
@@ -64,7 +66,6 @@ function initHamburger() {
     mobileMenu.classList.toggle('open');
   });
 
-  // Close mobile menu when a link is clicked
   mobileMenu.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       mobileMenu.classList.remove('open');
@@ -79,12 +80,10 @@ function toggleFaq(questionEl) {
 
   const isOpen = item.classList.contains('open');
 
-  // Close all open items
   document.querySelectorAll('.faq-item.open').forEach(openItem => {
     openItem.classList.remove('open');
   });
 
-  // Open clicked item if it was closed
   if (!isOpen) {
     item.classList.add('open');
   }
@@ -147,6 +146,13 @@ function filterDrivers() {
     if (search && !d.naam.toLowerCase().includes(search) && !(d.route || '').toLowerCase().includes(search)) return false;
     if (school && d.school !== school) return false;
     if (route  && d.route  !== route)  return false;
+    
+    const selectedDay = document.getElementById('f-dag')?.value || '';
+    if (selectedDay && d.dagen && d.dagen.length > 0) {
+      const hasDay = d.dagen.some(day => day.trim().toLowerCase().includes(selectedDay.toLowerCase()));
+      if (!hasDay) return false;
+    }
+    
     return true;
   });
 
@@ -165,21 +171,48 @@ function filterDrivers() {
   }
 }
 
-function resetFilters() {
-  ['f-search', 'f-school', 'f-route', 'f-dag', 'f-prijs'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
+function updateOptions() {
+  const category = document.getElementById('category')?.value || '';
+  const schoolSelect = document.getElementById('f-school');
+  if (!schoolSelect) return;
+
+  const options = schoolSelect.querySelectorAll('option');
+
+  options.forEach(opt => {
+    const optCat = opt.getAttribute('data-category');
+    if (!category || !optCat || optCat === category) {
+      opt.style.display = '';
+    } else {
+      opt.style.display = 'none';
+    }
   });
+
+  const selectedOpt = schoolSelect.options[schoolSelect.selectedIndex];
+  if (selectedOpt && selectedOpt.style.display === 'none') {
+    schoolSelect.value = '';
+  }
+
   filterDrivers();
 }
 
-function updateOptions() {
-  const selectedCategory = document.getElementById('category')?.value || '';
-  document.querySelectorAll('.items option').forEach(option => {
-    const cat = option.getAttribute('data-category');
-    if (!cat) return;
-    option.style.display = (cat === selectedCategory || selectedCategory === '') ? '' : 'none';
-  });
+function resetFilters() {
+  const search = document.getElementById('f-search');
+  const cat = document.getElementById('category');
+  const school = document.getElementById('f-school');
+  const route = document.getElementById('f-route');
+  const dag = document.getElementById('f-dag');
+
+  if (search) search.value = '';
+  if (cat) cat.value = '';
+  if (school) school.value = '';
+  if (route) route.value = '';
+  if (dag) dag.value = '';
+
+  if (school) {
+    school.querySelectorAll('option').forEach(opt => opt.style.display = '');
+  }
+
+  filterDrivers();
 }
 
 // ── 6. MODAL ─────────────────────────────────────────────────
@@ -252,9 +285,7 @@ function closeModalDirect() {
   document.body.style.overflow = '';
 }
 
-// ── 7. REGISTRATION FORM ─────────────────────────────────────
-const registeredDrivers = [];
-let nextId = 100;
+// ── 7. REGISTRATION FORM & API CONNECTIONS ───────────────────
 let fotoFile = null;
 
 function handlePhotoPreview(input) {
@@ -263,6 +294,14 @@ function handlePhotoPreview(input) {
   if (!preview) return;
 
   if (fotoFile) {
+    if (fotoFile.size > 10 * 1024 * 1024) {
+      alert("Deze foto is te groot. Kies een afbeelding kleiner dan 10MB.");
+      input.value = ""; 
+      fotoFile = null;
+      preview.style.display = 'none';
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = e => {
       preview.style.display = 'block';
@@ -280,15 +319,14 @@ function updateCharCount() {
   if (count) count.textContent = val;
 }
 
-function toggleDay(el) {
-  el.classList.toggle('on');
-}
+// ── SUBMIT REGISTRATION TO BACKEND API ──
+function submitRegistration(event) {
+  if(event) event.preventDefault(); 
 
-function submitRegistration() {
-  const voornaam  = document.getElementById('r-voornaam')?.value.trim() || '';
+  const voornaam   = document.getElementById('r-voornaam')?.value.trim() || '';
   const achternaam = document.getElementById('r-achternaam')?.value.trim() || '';
-  const email     = document.getElementById('r-email')?.value.trim() || '';
-  const akkoord   = document.getElementById('r-akkoord')?.checked || false;
+  const email      = document.getElementById('r-email')?.value.trim() || '';
+  const akkoord    = document.getElementById('r-akkoord')?.checked || false;
 
   if (!voornaam || !achternaam || !email) {
     alert('Vul alle verplichte velden in (naam en e-mail).');
@@ -303,63 +341,144 @@ function submitRegistration() {
     return;
   }
 
-  const dagen = [...document.querySelectorAll('#days-grid .day-toggle.on')]
-    .map(el => el.textContent);
+  // Collect the selected system filter day value
+  const dayValue = document.getElementById('f-dag')?.value || 'Ma';
 
   const reader = new FileReader();
-  reader.onload = e => {
-    const newDriver = {
-      id:       nextId++,
-      naam:     `${voornaam} ${achternaam}`,
-      initials: (voornaam[0] + achternaam[0]).toUpperCase(),
-      foto:     e.target.result,
-      erv:      parseInt(document.getElementById('r-ervaring')?.value) || 1,
-      route:    document.getElementById('r-route')?.value || 'Centrum',
-      school:   document.getElementById('r-school')?.value || '',
-      tijdOch:  document.getElementById('r-tijd-och')?.value || '07:30',
-      tijdMid:  document.getElementById('r-tijd-mid')?.value || '14:30',
-      dagen:    dagen.length > 0 ? dagen : ['Ma', 'Di', 'Wo', 'Do', 'Vr'],
+  reader.onload = async (e) => {
+    const base64Image = e.target.result;
+
+    const registrationData = {
+      voornaam: voornaam,
+      achternaam: achternaam,
+      email: email,
+      telefoon: document.getElementById('r-telefoon')?.value.trim() || '',
+      profile_photo_url: base64Image,
+      rijbewijs: document.getElementById('r-rijbewijs-type')?.value || 'B', 
+      ervaring: parseInt(document.getElementById('r-ervaring')?.value) || 1,
       voertuig: document.getElementById('r-voertuig')?.value || 'Minibus',
       capaciteit: parseInt(document.getElementById('r-capaciteit')?.value) || 8,
-      kenteken: document.getElementById('r-kenteken')?.value || 'N.v.t.',
-      extra:    document.getElementById('r-extra')?.value || 'Geen',
-      prijs:    parseInt(document.getElementById('r-prijs')?.value) || 150,
-      terug:    document.getElementById('r-terug')?.value || 'Heen & terug',
-      bio:      document.getElementById('r-bio')?.value || 'Betrouwbaar schoolvervoer.',
-      rating:   5.0,
-      reviews:  0,
+      kentekenplaat: document.getElementById('r-kenteken')?.value || 'N.v.t.',
+      bouwjaar: parseInt(document.getElementById('r-bouwjaar')?.value) || null,
+      route: document.getElementById('r-route')?.value || 'Centrum',
+      school: document.getElementById('r-school')?.value || '',
+      tijd_och: document.getElementById('r-tijd-och')?.value || '07:30',
+      tijd_mid: document.getElementById('r-tijd-mid')?.value || '14:30',
+      dag: dayValue,
+      prijs: parseInt(document.getElementById('r-prijs')?.value) || 150,
+      op_afhaal: document.getElementById('r-terug')?.value || 'Heen & terug'
     };
 
-    registeredDrivers.push(newDriver);
-    allDrivers.push(newDriver);
-    filterDrivers();
+    try {
+      const form = document.getElementById('register-form');
+      if (form) form.style.pointerEvents = 'none';
 
-    // Show success
-    const banner = document.getElementById('success-banner');
-    const form   = document.getElementById('register-form');
-    if (banner) banner.classList.add('show');
-    if (form)   { form.style.opacity = '0.5'; form.style.pointerEvents = 'none'; }
+      const response = await fetch(`${API_BASE_URL}/api/register-driver`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(registrationData)
+      });
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        const newDriver = {
+          id: result.user_id,
+          naam: `${voornaam} ${achternaam}`,
+          foto: base64Image,
+          erv: registrationData.ervaring,
+          route: registrationData.route,
+          school: registrationData.school,
+          tijdOch: registrationData.tijd_och,
+          tijdMid: registrationData.tijd_mid,
+          dagen: [dayValue],
+          voertuig: registrationData.voertuig,
+          capaciteit: registrationData.capaciteit,
+          kenteken: registrationData.kentekenplaat,
+          prijs: registrationData.prijs,
+          bio: document.getElementById('r-bio')?.value || 'Betrouwbaar schoolvervoer.',
+          rating: 5.0,
+          reviews: 0,
+          extra: registrationData.op_afhaal
+        };
+
+        allDrivers.push(newDriver);
+        filterDrivers();
+
+        const banner = document.getElementById('success-banner');
+        if (banner) banner.style.display = 'flex'; 
+        if (form) {
+          form.reset();
+          form.style.opacity = '0.5';
+        }
+        const preview = document.getElementById('photo-preview');
+        if (preview) preview.style.display = 'none';
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        throw new Error(result.error || 'Server connection failed.');
+      }
+    } catch (error) {
+      console.error('API Error details:', error);
+      alert('Er is een fout opgetreden bij het registreren.');
+      const form = document.getElementById('register-form');
+      if (form) form.style.pointerEvents = 'auto';
+    }
   };
-
   reader.readAsDataURL(fotoFile);
 }
 
-function submitContactForm(e) {
-  e.preventDefault();
-  const naam    = document.getElementById('contact-name')?.value.trim();
-  const email   = document.getElementById('contact-email')?.value.trim();
-  const message = document.getElementById('contact-message')?.value.trim();
+// ── SUBMIT CONTACT VIA NATIVE FETCH ROUTE ──
+async function submitContactForm(event) {
+  event.preventDefault();
 
-  if (!naam || !email || !message) {
+  const data = {
+    name: document.getElementById("contact-name")?.value.trim() || "",
+    achternaam: document.getElementById("contact-achternaam")?.value.trim() || "",
+    email: document.getElementById("contact-email")?.value.trim() || "",
+    subject: document.getElementById("contact-subject")?.value.trim() || "No Subject",
+    message: document.getElementById("contact-message")?.value.trim() || ""
+  };
+
+  if (!data.name || !data.email || !data.message) {
     alert('Vul alle verplichte velden in.');
     return;
   }
 
-  alert(`Bedankt, ${naam}! Uw bericht is verstuurd. Wij nemen zo spoedig mogelijk contact met u op.`);
-  e.target.reset();
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      alert("Bericht succesvol verzonden!");
+      event.target.reset();
+    } else {
+      alert("Er ging iets mis bij de verwerking van het bericht.");
+    }
+  } catch (err) {
+    console.error("Contact send failed:", err);
+    alert("Kon geen verbinding maken met de server.");
+  }
 }
+
+// Explicit Window Bindings for HTML Context Lifecycle Execution
+window.showPage = showPage;
+window.filterDrivers = filterDrivers;
+window.updateOptions = updateOptions;
+window.resetFilters = resetFilters;
+window.submitContactForm = submitContactForm;
+window.submitRegistration = submitRegistration;
+window.handlePhotoPreview = handlePhotoPreview;
+window.updateCharCount = updateCharCount;
+window.toggleFaq = toggleFaq;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.closeModalDirect = closeModalDirect;
 
 // ── 8. SCROLL REVEAL TRANSITIONS ─────────────────────────────
 function checkReveal() {
@@ -375,7 +494,6 @@ function checkReveal() {
 }
 
 function initScrollReveal() {
-  // Mark all section children as reveal elements
   document.querySelectorAll('.section-header, .driver-card, .faq-item, .form-section, .contact-info-card, .contact-form-card, .sidebar-card, .form-card').forEach((el, i) => {
     el.classList.add('reveal');
     if (i % 4 === 1) el.classList.add('reveal-delay-1');
@@ -387,13 +505,447 @@ function initScrollReveal() {
   window.addEventListener('scroll', checkReveal, { passive: true });
 }
 
+// ── 9. TRACKER — Live Locatie / Schoolbus GPS ────────────────
+const TRACKER_BUS_ID = 'bus-001';
+
+let trackerRole     = null;
+let trackerSocket   = null;
+let trackerMap      = null;
+let busMarker       = null;
+let routePolyline   = null;
+let routeCoords     = [];
+let geoWatchId      = null;
+let isTracking      = false;
+let mapsLoadPromise = null;
+
+// ── Rol selecteren ──
+function setTrackerRole(role) {
+  trackerRole = sessionStorage.getItem('tracker-role') || role;
+  trackerRole = role; // always update on explicit selection
+  sessionStorage.setItem('tracker-role', role);
+
+  const wrap      = document.getElementById('tracker-role-wrap');
+  const dashboard = document.getElementById('tracker-dashboard');
+  const badge     = document.getElementById('tracker-role-badge');
+  const adminPanel = document.getElementById('admin-panel');
+
+  if (wrap)      wrap.style.display      = 'none';
+  if (dashboard) dashboard.style.display = 'block';
+
+  const labels = { ouder: '👨‍👩‍👧 Ouder', chauffeur: '🚌 Chauffeur', admin: '⚙️ Admin' };
+  if (badge) badge.textContent = labels[role] || '';
+
+  renderTrackerControls(role);
+  if (role === 'admin' && adminPanel) adminPanel.style.display = 'block';
+
+  connectTrackerSocket();
+
+  loadGoogleMaps().then(() => {
+    initTrackerMap();
+  }).catch(() => {
+    showTrackerToast('⚠️', 'Kaart kon niet worden geladen. Controleer de Google Maps API-sleutel.');
+  });
+
+  requestNotificationPermission();
+}
+
+function resetTrackerRole() {
+  sessionStorage.removeItem('tracker-role');
+  trackerRole = null;
+
+  if (isTracking) stopTracking();
+  if (trackerSocket) { trackerSocket.disconnect(); trackerSocket = null; }
+
+  const wrap      = document.getElementById('tracker-role-wrap');
+  const dashboard = document.getElementById('tracker-dashboard');
+  if (wrap)      wrap.style.display      = 'block';
+  if (dashboard) dashboard.style.display = 'none';
+
+  // Reset map state so it re-initializes cleanly next time
+  trackerMap    = null;
+  busMarker     = null;
+  routePolyline = null;
+  routeCoords   = [];
+
+  const mapEl = document.getElementById('tracker-map');
+  if (mapEl) mapEl.innerHTML = '';
+}
+
+// ── Chauffeur-knoppen renderen ──
+function renderTrackerControls(role) {
+  const ctrl = document.getElementById('tracker-controls');
+  if (!ctrl) return;
+
+  if (role === 'chauffeur') {
+    ctrl.innerHTML = `
+      <button class="btn btn-amber tracker-btn" id="track-toggle-btn" onclick="toggleTracking()">
+        📡 Start tracking
+      </button>
+    `;
+  } else {
+    ctrl.innerHTML = `<span class="tracker-viewer-label">U bekijkt als ${role === 'admin' ? 'Admin' : 'Ouder'}</span>`;
+  }
+}
+
+// ── Socket.IO verbinding ──
+function connectTrackerSocket() {
+  if (trackerSocket && trackerSocket.connected) return;
+
+  trackerSocket = io(API_BASE_URL, { transports: ['websocket', 'polling'] });
+
+  trackerSocket.on('connect', () => {
+    console.log('Tracker verbonden met server.');
+  });
+
+  trackerSocket.on('bus:location-update', ({ lat, lng }) => {
+    updateBusMarker(lat, lng);
+  });
+
+  trackerSocket.on('bus:status', ({ online, driverName }) => {
+    handleBusStatus(online, driverName);
+  });
+
+  trackerSocket.on('disconnect', () => {
+    handleBusStatus(false, null);
+  });
+}
+
+// ── Status UI bijwerken ──
+function handleBusStatus(online, driverName) {
+  const dot      = document.getElementById('status-dot');
+  const label    = document.getElementById('status-label');
+  const ticStatus = document.getElementById('tic-status');
+  const overlay  = document.getElementById('tracker-map-overlay');
+
+  if (dot) {
+    dot.className = `status-dot ${online ? 'online' : 'offline'}`;
+  }
+  if (label) {
+    label.textContent = online
+      ? `Bus: Online${driverName ? ' — ' + driverName : ''}`
+      : 'Bus: Offline';
+  }
+  if (ticStatus) {
+    ticStatus.textContent = online ? 'Online ✓' : 'Offline';
+    ticStatus.style.color = online ? 'var(--success)' : '';
+  }
+
+  if (!online && overlay) {
+    overlay.style.display = 'flex';
+  }
+
+  if (online) {
+    showTrackerToast('🚌', `De schoolbus is gestart${driverName ? ' — ' + driverName : ''}`);
+    sendBrowserNotification('BusConnect', `De schoolbus is gestart en is nu online.`);
+    updateAdminPanel();
+  } else {
+    showTrackerToast('🔴', 'De schoolbus heeft tracking gestopt.');
+    sendBrowserNotification('BusConnect', 'De schoolbus is gestopt en nu offline.');
+    updateAdminPanel();
+  }
+}
+
+// ── Busmarker bijwerken op kaart ──
+function updateBusMarker(lat, lng) {
+  const overlay = document.getElementById('tracker-map-overlay');
+  if (overlay) overlay.style.display = 'none';
+
+  if (!trackerMap) return;
+
+  const pos = { lat, lng };
+
+  if (!busMarker) {
+    busMarker = new google.maps.Marker({
+      position: pos,
+      map:      trackerMap,
+      title:    'Schoolbus — BusConnect',
+      icon: {
+        url:        'buslogo.png',
+        scaledSize: new google.maps.Size(44, 44),
+        anchor:     new google.maps.Point(22, 22)
+      },
+      zIndex: 10
+    });
+  } else {
+    busMarker.setPosition(pos);
+  }
+
+  // Route polyline
+  routeCoords.push(pos);
+  if (!routePolyline) {
+    routePolyline = new google.maps.Polyline({
+      path:         routeCoords,
+      geodesic:     true,
+      strokeColor:  '#f5a623',
+      strokeOpacity: 0.85,
+      strokeWeight: 5,
+      map:          trackerMap
+    });
+  } else {
+    routePolyline.setPath(routeCoords);
+  }
+
+  trackerMap.panTo(pos);
+
+  const now = new Date();
+  const timeEl   = document.getElementById('tic-time');
+  const coordsEl = document.getElementById('tic-coords');
+  const pointsEl = document.getElementById('tic-points');
+
+  if (timeEl)   timeEl.textContent   = now.toLocaleTimeString('nl-SR');
+  if (coordsEl) coordsEl.textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  if (pointsEl) pointsEl.textContent = routeCoords.length;
+}
+
+// ── Google Maps laden (lazy, eenmalig) ──
+function loadGoogleMaps() {
+  if (mapsLoadPromise) return mapsLoadPromise;
+
+  if (window.google && window.google.maps) {
+    mapsLoadPromise = Promise.resolve();
+    return mapsLoadPromise;
+  }
+
+  mapsLoadPromise = fetch(`${API_BASE_URL}/api/config`)
+    .then(r => r.json())
+    .then(cfg => new Promise((resolve, reject) => {
+      window._mapsReadyResolve = resolve;
+
+      const script = document.createElement('script');
+      script.src   = `https://maps.googleapis.com/maps/api/js?key=${cfg.mapsKey}&callback=_mapsReadyResolve&language=nl`;
+      script.async = true;
+      script.defer = true;
+      script.onerror = () => {
+        mapsLoadPromise = null;
+        reject(new Error('Google Maps laden mislukt'));
+      };
+      document.head.appendChild(script);
+    }))
+    .catch(err => {
+      mapsLoadPromise = null;
+      throw err;
+    });
+
+  return mapsLoadPromise;
+}
+
+// ── Kaart initialiseren ──
+function initTrackerMap() {
+  const el = document.getElementById('tracker-map');
+  if (!el || trackerMap) return;
+
+  trackerMap = new google.maps.Map(el, {
+    center:              { lat: 5.8520, lng: -55.2038 }, // Paramaribo, Suriname
+    zoom:                13,
+    mapTypeControl:      false,
+    streetViewControl:   false,
+    fullscreenControl:   true,
+    zoomControlOptions: {
+      position: google.maps.ControlPosition.RIGHT_BOTTOM
+    }
+  });
+}
+
+// ── GPS Tracking (chauffeur) ──
+function toggleTracking() {
+  if (isTracking) {
+    stopTracking();
+  } else {
+    startTracking();
+  }
+}
+
+function startTracking() {
+  if (!navigator.geolocation) {
+    alert('GPS is niet beschikbaar op dit apparaat of in deze browser.');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    () => {
+      isTracking = true;
+      setTrackButtonState(true);
+
+      trackerSocket.emit('driver:start', {
+        driverName: 'Chauffeur',
+        busId:      TRACKER_BUS_ID
+      });
+
+      geoWatchId = navigator.geolocation.watchPosition(
+        pos => {
+          const { latitude: lat, longitude: lng } = pos.coords;
+          trackerSocket.emit('driver:location', { lat, lng, busId: TRACKER_BUS_ID });
+          updateBusMarker(lat, lng);
+        },
+        err => {
+          console.error('GPS fout:', err);
+          showTrackerToast('⚠️', 'Locatie tijdelijk niet beschikbaar — GPS fout.');
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      );
+    },
+    () => {
+      alert('GPS toegang geweigerd. Sta locatietoegang toe in uw browserinstellingen en probeer opnieuw.');
+    },
+    { timeout: 10000 }
+  );
+}
+
+function stopTracking() {
+  isTracking = false;
+
+  if (geoWatchId !== null) {
+    navigator.geolocation.clearWatch(geoWatchId);
+    geoWatchId = null;
+  }
+
+  if (trackerSocket) {
+    trackerSocket.emit('driver:stop', { busId: TRACKER_BUS_ID });
+  }
+
+  setTrackButtonState(false);
+
+  // Route wissen van de kaart maar historiek bewaren
+  routeCoords   = [];
+  busMarker     = null;
+  routePolyline = null;
+  if (trackerMap) {
+    if (busMarker)     busMarker.setMap(null);
+    if (routePolyline) routePolyline.setMap(null);
+  }
+}
+
+function setTrackButtonState(tracking) {
+  const btn = document.getElementById('track-toggle-btn');
+  if (!btn) return;
+  if (tracking) {
+    btn.textContent = '⏹ Stop tracking';
+    btn.classList.replace('btn-amber', 'btn-danger');
+  } else {
+    btn.textContent = '📡 Start tracking';
+    btn.classList.replace('btn-danger', 'btn-amber');
+  }
+}
+
+// ── Admin panel bijwerken ──
+function updateAdminPanel() {
+  const panel = document.getElementById('admin-bus-list');
+  if (!panel || trackerRole !== 'admin') return;
+
+  fetch(`${API_BASE_URL}/api/tracker/status`)
+    .then(r => r.json())
+    .then(data => {
+      if (!data.buses || data.buses.length === 0) {
+        panel.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem;">Geen actieve bussen gevonden.</p>';
+        return;
+      }
+      panel.innerHTML = data.buses.map(b => `
+        <div class="admin-bus-row">
+          <span class="status-dot online"></span>
+          <span><strong>${b.busId}</strong> — ${b.driverName || 'Onbekend'}</span>
+          <span class="admin-badge">Online</span>
+        </div>
+      `).join('');
+    })
+    .catch(() => {
+      panel.innerHTML = '<p style="color:var(--danger);font-size:0.85rem;">Kon serverdata niet ophalen.</p>';
+    });
+}
+
+// ── Browser notificaties ──
+function requestNotificationPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function sendBrowserNotification(title, body) {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(title, {
+      body,
+      icon: 'buslogo.png',
+      badge: 'buslogo.png'
+    });
+  }
+}
+
+// ── In-app toast melding ──
+function showTrackerToast(icon, msg, durationMs = 5000) {
+  const toast   = document.getElementById('tracker-toast');
+  const iconEl  = document.getElementById('toast-icon');
+  const msgEl   = document.getElementById('toast-msg');
+  if (!toast) return;
+
+  if (iconEl) iconEl.textContent = icon;
+  if (msgEl)  msgEl.textContent  = msg;
+
+  toast.style.display = 'flex';
+  toast.classList.add('toast-visible');
+
+  clearTimeout(toast._hideTimer);
+  toast._hideTimer = setTimeout(closeTrackerToast, durationMs);
+}
+
+function closeTrackerToast() {
+  const toast = document.getElementById('tracker-toast');
+  if (toast) {
+    toast.classList.remove('toast-visible');
+    setTimeout(() => { toast.style.display = 'none'; }, 300);
+  }
+}
+
+// ── Tracker initialiseren bij tonen van de pagina ──
+function initTrackerPage() {
+  const savedRole = sessionStorage.getItem('tracker-role');
+  if (savedRole) {
+    setTrackerRole(savedRole);
+  }
+}
+
+// Window bindings (vereist door module scope)
+window.setTrackerRole    = setTrackerRole;
+window.resetTrackerRole  = resetTrackerRole;
+window.toggleTracking    = toggleTracking;
+window.closeTrackerToast = closeTrackerToast;
+window._mapsReadyResolve = null; // wordt overschreven door loadGoogleMaps
+
 // ── 9. INIT ───────────────────────────────────────────────────
+async function fetchLiveDrivers() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/drivers`);
+    if(res.ok) {
+      const rawDrivers = await res.json();
+
+      allDrivers = rawDrivers.map(d => ({
+        id: d.user_id,
+        naam: `${d.voornaam} ${d.achternaam}`,
+        foto: d.profile_photo_url,
+        erv: d.ervaring,
+        route: d.route,
+        school: d.school,
+        tijdOch: d.tijd_och,
+        tijdMid: d.tijd_mid,
+        voertuig: d.voertuig,
+        capaciteit: d.capaciteit,
+        kenteken: d.kentekenplaat,
+        prijs: d.prijs,
+        extra: d.op_afhaal,
+        rating: 5,
+        reviews: 0,
+        bio: "Professionele schoolchauffeur.",
+        dagen: d.dag ? d.dag.split(",") : []
+      }));
+      filterDrivers();
+    }
+  } catch (err) {
+    console.error("Could not fetch database drivers:", err);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
   initHamburger();
   initScrollReveal();
-  filterDrivers();
-
-  // Default to home page
+  fetchLiveDrivers(); 
   showPage('home');
 });
