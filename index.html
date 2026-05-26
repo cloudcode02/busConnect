@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BusConnect — Suriname's Schoolbus Platform</title>
-  <link rel="icon" href="img/buslogo.png" />
+  <link rel="icon" href="buslogo.png" />
   <link rel="stylesheet" href="main.css" />
 </head>
 <body>
 
   <nav>
     <a class="nav-logo" href="#" onclick="showPage('home'); return false;">
-      <img src="img/buslogo.png" alt="BusConnect logo" />
+      <img src="buslogo.png" alt="BusConnect logo" />
       🚌 Bus<span>Connect</span>
     </a>
 
@@ -22,6 +22,7 @@
         <button class="nav-pill"        data-page="contact" onclick="showPage('contact')">Contact</button>
         <button class="nav-pill"        data-page="faq"     onclick="showPage('faq')">FAQ</button>
         <button class="nav-pill"        data-page="signin"  onclick="showPage('signin')">Registreer</button>
+        <button class="nav-pill nav-pill--tracker" data-page="tracker" onclick="showPage('tracker')">📍 Live Locatie</button>
       </div>
     </div>
 
@@ -46,11 +47,12 @@
     <a href="#" onclick="showPage('contact'); return false;">📬 Contact</a>
     <a href="#" onclick="showPage('faq');     return false;">❓ FAQ</a>
     <a href="#" onclick="showPage('signin');  return false;">🚌 Registreer als Chauffeur</a>
+    <a href="#" onclick="showPage('tracker'); return false;">📍 Live Locatie</a>
   </div>
 
   <div id="page-home" class="page active">
     <div class="hero">
-      <img src="img/buslogo.png" alt="BusConnect logo" class="hero-logo" />
+      <img src="buslogo.png" alt="BusConnect logo" class="hero-logo" />
       <div class="hero-tag">🇸🇷 Suriname's #1 Schoolbus Platform</div>
       <h1>Veilig en <span>betrouwbaar</span> schoolvervoer vinden</h1>
       <p>BusConnect verbindt ouders met gecertificeerde schoolbuschauffeurs in Suriname. Bekijk routes, vergelijk prijzen en neem direct contact op.</p>
@@ -457,6 +459,130 @@
     </section>
   </div>
 
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGINA: LIVE LOCATIE / SCHOOLBUS TRACKER
+  ════════════════════════════════════════════════════════════ -->
+  <div id="page-tracker" class="page">
+
+    <!-- Hero -->
+    <div class="hero tracker-hero">
+      <div class="hero-tag">📡 Realtime GPS Tracking</div>
+      <h1>Live Locatie <span>Schoolbus</span></h1>
+      <p>Volg de schoolbus live op de kaart. Chauffeurs kunnen hun locatie delen via GPS, ouders kunnen meekijken in realtime.</p>
+    </div>
+
+    <section class="section">
+      <div class="container">
+
+        <!-- ── Rol-selector (verdwijnt na keuze) ── -->
+        <div class="tracker-role-wrap" id="tracker-role-wrap">
+          <div class="tracker-role-card reveal">
+            <h3>Selecteer uw rol om verder te gaan</h3>
+            <p>Uw rol bepaalt wat u op deze pagina kunt doen.</p>
+            <div class="role-btn-grid">
+              <button class="role-btn" onclick="setTrackerRole('ouder')">
+                <span class="role-icon">👨‍👩‍👧</span>
+                <strong>Ouder / Passagier</strong>
+                <small>Bekijk de live locatie van de bus</small>
+              </button>
+              <button class="role-btn role-btn--driver" onclick="setTrackerRole('chauffeur')">
+                <span class="role-icon">🚌</span>
+                <strong>Chauffeur</strong>
+                <small>Deel uw GPS-locatie in realtime</small>
+              </button>
+              <button class="role-btn role-btn--admin" onclick="setTrackerRole('admin')">
+                <span class="role-icon">⚙️</span>
+                <strong>Admin</strong>
+                <small>Beheer en overzicht van alle bussen</small>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Tracker dashboard (zichtbaar na rolkeuze) ── -->
+        <div class="tracker-dashboard" id="tracker-dashboard" style="display:none;">
+
+          <!-- Statusbalk -->
+          <div class="tracker-topbar reveal">
+            <div class="tracker-status-indicator" id="bus-status-indicator">
+              <span class="status-dot offline" id="status-dot"></span>
+              <span id="status-label">Bus: Offline</span>
+            </div>
+            <div class="tracker-role-badge" id="tracker-role-badge"></div>
+            <div class="tracker-controls" id="tracker-controls"></div>
+          </div>
+
+          <!-- Kaart -->
+          <div class="tracker-map-wrap reveal" id="tracker-map-wrap">
+            <div id="tracker-map"></div>
+
+            <!-- Overlay wanneer geen locatie beschikbaar -->
+            <div class="tracker-map-overlay" id="tracker-map-overlay">
+              <div class="overlay-inner">
+                <div class="overlay-icon">📍</div>
+                <p class="overlay-title">Locatie tijdelijk niet beschikbaar</p>
+                <p class="overlay-sub">Wacht totdat de chauffeur tracking inschakelt.</p>
+              </div>
+            </div>
+
+            <!-- Kaart-legenda -->
+            <div class="map-legend">
+              <span class="legend-item"><span class="legend-dot legend-bus"></span>Bus positie</span>
+              <span class="legend-item"><span class="legend-line"></span>Afgelegd route</span>
+            </div>
+          </div>
+
+          <!-- Info-kaarten -->
+          <div class="tracker-info-row reveal">
+            <div class="tracker-info-card">
+              <div class="tic-icon">📡</div>
+              <div class="tic-label">Status</div>
+              <div class="tic-val" id="tic-status">Offline</div>
+            </div>
+            <div class="tracker-info-card">
+              <div class="tic-icon">🕐</div>
+              <div class="tic-label">Laatste update</div>
+              <div class="tic-val" id="tic-time">—</div>
+            </div>
+            <div class="tracker-info-card">
+              <div class="tic-icon">📍</div>
+              <div class="tic-label">Coördinaten</div>
+              <div class="tic-val" id="tic-coords">Onbekend</div>
+            </div>
+            <div class="tracker-info-card">
+              <div class="tic-icon">🛣️</div>
+              <div class="tic-label">Punt op route</div>
+              <div class="tic-val" id="tic-points">0</div>
+            </div>
+          </div>
+
+          <!-- Admin: bus-overzicht tabel -->
+          <div class="admin-panel reveal" id="admin-panel" style="display:none;">
+            <h3 class="admin-title">⚙️ Admin — Busoverzicht</h3>
+            <div id="admin-bus-list">
+              <p style="color:var(--text-muted);font-size:0.9rem;">Geen actieve bussen gevonden.</p>
+            </div>
+          </div>
+
+          <!-- Terug-knop -->
+          <div style="text-align:center;margin-top:1.5rem;" class="reveal">
+            <button class="btn btn-outline" onclick="resetTrackerRole()">← Verander rol</button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Notification toast -->
+  <div class="tracker-toast" id="tracker-toast" style="display:none;">
+    <span class="toast-icon" id="toast-icon">🚌</span>
+    <span class="toast-msg"  id="toast-msg">De bus is vertrokken</span>
+    <button class="toast-close" onclick="closeTrackerToast()">✕</button>
+  </div>
+
+  <!-- Google Maps API-sleutel wordt veilig opgehaald via /api/config -->
+
   <div class="modal-overlay" id="modal" onclick="closeModal(event)">
     <div class="modal">
       <div class="modal-header">
@@ -477,6 +603,8 @@
     </div>
   </footer>
 
+  <!-- Socket.IO client (geserveerd door de eigen server, of via CDN als fallback) -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
   <script type="module" src="main.js"></script>
 </body>
 </html>

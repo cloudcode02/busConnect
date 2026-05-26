@@ -50,6 +50,10 @@ function showPage(page) {
   });
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (page === 'tracker') {
+    initTrackerPage();
+  }
 }
 
 // ── 3. HAMBURGER MENU (mobile) ───────────────────────────────
@@ -500,6 +504,410 @@ function initScrollReveal() {
   checkReveal();
   window.addEventListener('scroll', checkReveal, { passive: true });
 }
+
+// ── 9. TRACKER — Live Locatie / Schoolbus GPS ────────────────
+const TRACKER_BUS_ID = 'bus-001';
+
+let trackerRole     = null;
+let trackerSocket   = null;
+let trackerMap      = null;
+let busMarker       = null;
+let routePolyline   = null;
+let routeCoords     = [];
+let geoWatchId      = null;
+let isTracking      = false;
+let mapsLoadPromise = null;
+
+// ── Rol selecteren ──
+function setTrackerRole(role) {
+  trackerRole = sessionStorage.getItem('tracker-role') || role;
+  trackerRole = role; // always update on explicit selection
+  sessionStorage.setItem('tracker-role', role);
+
+  const wrap      = document.getElementById('tracker-role-wrap');
+  const dashboard = document.getElementById('tracker-dashboard');
+  const badge     = document.getElementById('tracker-role-badge');
+  const adminPanel = document.getElementById('admin-panel');
+
+  if (wrap)      wrap.style.display      = 'none';
+  if (dashboard) dashboard.style.display = 'block';
+
+  const labels = { ouder: '👨‍👩‍👧 Ouder', chauffeur: '🚌 Chauffeur', admin: '⚙️ Admin' };
+  if (badge) badge.textContent = labels[role] || '';
+
+  renderTrackerControls(role);
+  if (role === 'admin' && adminPanel) adminPanel.style.display = 'block';
+
+  connectTrackerSocket();
+
+  loadGoogleMaps().then(() => {
+    initTrackerMap();
+  }).catch(() => {
+    showTrackerToast('⚠️', 'Kaart kon niet worden geladen. Controleer de Google Maps API-sleutel.');
+  });
+
+  requestNotificationPermission();
+}
+
+function resetTrackerRole() {
+  sessionStorage.removeItem('tracker-role');
+  trackerRole = null;
+
+  if (isTracking) stopTracking();
+  if (trackerSocket) { trackerSocket.disconnect(); trackerSocket = null; }
+
+  const wrap      = document.getElementById('tracker-role-wrap');
+  const dashboard = document.getElementById('tracker-dashboard');
+  if (wrap)      wrap.style.display      = 'block';
+  if (dashboard) dashboard.style.display = 'none';
+
+  // Reset map state so it re-initializes cleanly next time
+  trackerMap    = null;
+  busMarker     = null;
+  routePolyline = null;
+  routeCoords   = [];
+
+  const mapEl = document.getElementById('tracker-map');
+  if (mapEl) mapEl.innerHTML = '';
+}
+
+// ── Chauffeur-knoppen renderen ──
+function renderTrackerControls(role) {
+  const ctrl = document.getElementById('tracker-controls');
+  if (!ctrl) return;
+
+  if (role === 'chauffeur') {
+    ctrl.innerHTML = `
+      <button class="btn btn-amber tracker-btn" id="track-toggle-btn" onclick="toggleTracking()">
+        📡 Start tracking
+      </button>
+    `;
+  } else {
+    ctrl.innerHTML = `<span class="tracker-viewer-label">U bekijkt als ${role === 'admin' ? 'Admin' : 'Ouder'}</span>`;
+  }
+}
+
+// ── Socket.IO verbinding ──
+function connectTrackerSocket() {
+  if (trackerSocket && trackerSocket.connected) return;
+
+  trackerSocket = io(API_BASE_URL, { transports: ['websocket', 'polling'] });
+
+  trackerSocket.on('connect', () => {
+    console.log('Tracker verbonden met server.');
+  });
+
+  trackerSocket.on('bus:location-update', ({ lat, lng }) => {
+    updateBusMarker(lat, lng);
+  });
+
+  trackerSocket.on('bus:status', ({ online, driverName }) => {
+    handleBusStatus(online, driverName);
+  });
+
+  trackerSocket.on('disconnect', () => {
+    handleBusStatus(false, null);
+  });
+}
+
+// ── Status UI bijwerken ──
+function handleBusStatus(online, driverName) {
+  const dot      = document.getElementById('status-dot');
+  const label    = document.getElementById('status-label');
+  const ticStatus = document.getElementById('tic-status');
+  const overlay  = document.getElementById('tracker-map-overlay');
+
+  if (dot) {
+    dot.className = `status-dot ${online ? 'online' : 'offline'}`;
+  }
+  if (label) {
+    label.textContent = online
+      ? `Bus: Online${driverName ? ' — ' + driverName : ''}`
+      : 'Bus: Offline';
+  }
+  if (ticStatus) {
+    ticStatus.textContent = online ? 'Online ✓' : 'Offline';
+    ticStatus.style.color = online ? 'var(--success)' : '';
+  }
+
+  if (!online && overlay) {
+    overlay.style.display = 'flex';
+  }
+
+  if (online) {
+    showTrackerToast('🚌', `De schoolbus is gestart${driverName ? ' — ' + driverName : ''}`);
+    sendBrowserNotification('BusConnect', `De schoolbus is gestart en is nu online.`);
+    updateAdminPanel();
+  } else {
+    showTrackerToast('🔴', 'De schoolbus heeft tracking gestopt.');
+    sendBrowserNotification('BusConnect', 'De schoolbus is gestopt en nu offline.');
+    updateAdminPanel();
+  }
+}
+
+// ── Busmarker bijwerken op kaart ──
+function updateBusMarker(lat, lng) {
+  const overlay = document.getElementById('tracker-map-overlay');
+  if (overlay) overlay.style.display = 'none';
+
+  if (!trackerMap) return;
+
+  const pos = { lat, lng };
+
+  if (!busMarker) {
+    busMarker = new google.maps.Marker({
+      position: pos,
+      map:      trackerMap,
+      title:    'Schoolbus — BusConnect',
+      icon: {
+        url:        'buslogo.png',
+        scaledSize: new google.maps.Size(44, 44),
+        anchor:     new google.maps.Point(22, 22)
+      },
+      zIndex: 10
+    });
+  } else {
+    busMarker.setPosition(pos);
+  }
+
+  // Route polyline
+  routeCoords.push(pos);
+  if (!routePolyline) {
+    routePolyline = new google.maps.Polyline({
+      path:         routeCoords,
+      geodesic:     true,
+      strokeColor:  '#f5a623',
+      strokeOpacity: 0.85,
+      strokeWeight: 5,
+      map:          trackerMap
+    });
+  } else {
+    routePolyline.setPath(routeCoords);
+  }
+
+  trackerMap.panTo(pos);
+
+  const now = new Date();
+  const timeEl   = document.getElementById('tic-time');
+  const coordsEl = document.getElementById('tic-coords');
+  const pointsEl = document.getElementById('tic-points');
+
+  if (timeEl)   timeEl.textContent   = now.toLocaleTimeString('nl-SR');
+  if (coordsEl) coordsEl.textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  if (pointsEl) pointsEl.textContent = routeCoords.length;
+}
+
+// ── Google Maps laden (lazy, eenmalig) ──
+function loadGoogleMaps() {
+  if (mapsLoadPromise) return mapsLoadPromise;
+
+  if (window.google && window.google.maps) {
+    mapsLoadPromise = Promise.resolve();
+    return mapsLoadPromise;
+  }
+
+  mapsLoadPromise = fetch(`${API_BASE_URL}/api/config`)
+    .then(r => r.json())
+    .then(cfg => new Promise((resolve, reject) => {
+      window._mapsReadyResolve = resolve;
+
+      const script = document.createElement('script');
+      script.src   = `https://maps.googleapis.com/maps/api/js?key=${cfg.mapsKey}&callback=_mapsReadyResolve&language=nl`;
+      script.async = true;
+      script.defer = true;
+      script.onerror = () => {
+        mapsLoadPromise = null;
+        reject(new Error('Google Maps laden mislukt'));
+      };
+      document.head.appendChild(script);
+    }))
+    .catch(err => {
+      mapsLoadPromise = null;
+      throw err;
+    });
+
+  return mapsLoadPromise;
+}
+
+// ── Kaart initialiseren ──
+function initTrackerMap() {
+  const el = document.getElementById('tracker-map');
+  if (!el || trackerMap) return;
+
+  trackerMap = new google.maps.Map(el, {
+    center:              { lat: 5.8520, lng: -55.2038 }, // Paramaribo, Suriname
+    zoom:                13,
+    mapTypeControl:      false,
+    streetViewControl:   false,
+    fullscreenControl:   true,
+    zoomControlOptions: {
+      position: google.maps.ControlPosition.RIGHT_BOTTOM
+    }
+  });
+}
+
+// ── GPS Tracking (chauffeur) ──
+function toggleTracking() {
+  if (isTracking) {
+    stopTracking();
+  } else {
+    startTracking();
+  }
+}
+
+function startTracking() {
+  if (!navigator.geolocation) {
+    alert('GPS is niet beschikbaar op dit apparaat of in deze browser.');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    () => {
+      isTracking = true;
+      setTrackButtonState(true);
+
+      trackerSocket.emit('driver:start', {
+        driverName: 'Chauffeur',
+        busId:      TRACKER_BUS_ID
+      });
+
+      geoWatchId = navigator.geolocation.watchPosition(
+        pos => {
+          const { latitude: lat, longitude: lng } = pos.coords;
+          trackerSocket.emit('driver:location', { lat, lng, busId: TRACKER_BUS_ID });
+          updateBusMarker(lat, lng);
+        },
+        err => {
+          console.error('GPS fout:', err);
+          showTrackerToast('⚠️', 'Locatie tijdelijk niet beschikbaar — GPS fout.');
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      );
+    },
+    () => {
+      alert('GPS toegang geweigerd. Sta locatietoegang toe in uw browserinstellingen en probeer opnieuw.');
+    },
+    { timeout: 10000 }
+  );
+}
+
+function stopTracking() {
+  isTracking = false;
+
+  if (geoWatchId !== null) {
+    navigator.geolocation.clearWatch(geoWatchId);
+    geoWatchId = null;
+  }
+
+  if (trackerSocket) {
+    trackerSocket.emit('driver:stop', { busId: TRACKER_BUS_ID });
+  }
+
+  setTrackButtonState(false);
+
+  // Route wissen van de kaart maar historiek bewaren
+  routeCoords   = [];
+  busMarker     = null;
+  routePolyline = null;
+  if (trackerMap) {
+    if (busMarker)     busMarker.setMap(null);
+    if (routePolyline) routePolyline.setMap(null);
+  }
+}
+
+function setTrackButtonState(tracking) {
+  const btn = document.getElementById('track-toggle-btn');
+  if (!btn) return;
+  if (tracking) {
+    btn.textContent = '⏹ Stop tracking';
+    btn.classList.replace('btn-amber', 'btn-danger');
+  } else {
+    btn.textContent = '📡 Start tracking';
+    btn.classList.replace('btn-danger', 'btn-amber');
+  }
+}
+
+// ── Admin panel bijwerken ──
+function updateAdminPanel() {
+  const panel = document.getElementById('admin-bus-list');
+  if (!panel || trackerRole !== 'admin') return;
+
+  fetch(`${API_BASE_URL}/api/tracker/status`)
+    .then(r => r.json())
+    .then(data => {
+      if (!data.buses || data.buses.length === 0) {
+        panel.innerHTML = '<p style="color:var(--text-muted);font-size:0.9rem;">Geen actieve bussen gevonden.</p>';
+        return;
+      }
+      panel.innerHTML = data.buses.map(b => `
+        <div class="admin-bus-row">
+          <span class="status-dot online"></span>
+          <span><strong>${b.busId}</strong> — ${b.driverName || 'Onbekend'}</span>
+          <span class="admin-badge">Online</span>
+        </div>
+      `).join('');
+    })
+    .catch(() => {
+      panel.innerHTML = '<p style="color:var(--danger);font-size:0.85rem;">Kon serverdata niet ophalen.</p>';
+    });
+}
+
+// ── Browser notificaties ──
+function requestNotificationPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function sendBrowserNotification(title, body) {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(title, {
+      body,
+      icon: 'buslogo.png',
+      badge: 'buslogo.png'
+    });
+  }
+}
+
+// ── In-app toast melding ──
+function showTrackerToast(icon, msg, durationMs = 5000) {
+  const toast   = document.getElementById('tracker-toast');
+  const iconEl  = document.getElementById('toast-icon');
+  const msgEl   = document.getElementById('toast-msg');
+  if (!toast) return;
+
+  if (iconEl) iconEl.textContent = icon;
+  if (msgEl)  msgEl.textContent  = msg;
+
+  toast.style.display = 'flex';
+  toast.classList.add('toast-visible');
+
+  clearTimeout(toast._hideTimer);
+  toast._hideTimer = setTimeout(closeTrackerToast, durationMs);
+}
+
+function closeTrackerToast() {
+  const toast = document.getElementById('tracker-toast');
+  if (toast) {
+    toast.classList.remove('toast-visible');
+    setTimeout(() => { toast.style.display = 'none'; }, 300);
+  }
+}
+
+// ── Tracker initialiseren bij tonen van de pagina ──
+function initTrackerPage() {
+  const savedRole = sessionStorage.getItem('tracker-role');
+  if (savedRole) {
+    setTrackerRole(savedRole);
+  }
+}
+
+// Window bindings (vereist door module scope)
+window.setTrackerRole    = setTrackerRole;
+window.resetTrackerRole  = resetTrackerRole;
+window.toggleTracking    = toggleTracking;
+window.closeTrackerToast = closeTrackerToast;
+window._mapsReadyResolve = null; // wordt overschreven door loadGoogleMaps
 
 // ── 9. INIT ───────────────────────────────────────────────────
 async function fetchLiveDrivers() {
