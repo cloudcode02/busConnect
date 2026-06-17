@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chauffuers</title>
+     <link rel="icon" title="image" href="img/bus.png"/>
+    <link rel="stylesheet" href="css/chauffeurs.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+</head>
+<body>
+    
+
+        <div class="header"></div>
+         <div id="page-signin" class="page">
+        <div class="container-hero">
+          <a href="index.html" class="arrow"><-- </a>
+            <div class="hero">
+
+          
+        <div class="hero-tag"> 🚌 word chauffeur</div>
+        <h1> word een <span>betrouwbare</span><br/>
+            schoolbuschauffeur bij Busconnect </h1>
+            <p> sluit je aan bij ons netwerk van professionele chauffeurs, krijg toegang tot meer klanten en groei met Busconnect</p>
+    
+        </div>
+        </div>
+        <br/>
+        <!--tot hier is goed-->
+    <div class="container">
+    <div class="register-layout">
+
+      <!-- SIDEBAR -->
+     <div class="flip-card">
+        <div class="flip-card-inner" id="flip-card-inner">
+        <!--front-->
+            <div class="flip-card-front">
+          <h3>Hoe werkt het?</h3>
+          <button id="cardTrigger" class="button">OPEN FOR TUTORIAL </button>
+        </div>
+        
+        <div class="flip-card-back">
+          <p>In een paar stappen staat u online en kunnen ouders u vinden.</p>
+          <div class="sidebar-steps">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-text"><strong>Vul uw gegevens in</strong>Naam, ervaring en voertuig.</div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-text"><strong>Stel uw route in</strong>Kies de wijk, school en tijden.</div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-text"><strong>Bepaal uw tarief</strong>U bepaalt zelf wat u vraagt per maand.</div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-text"><strong>Online!</strong>Ouders kunnen u direct vinden en contact opnemen.</div>
+            </div>
+          </div>
+        </div>
+      </div> <!--flip card inner-->
+    </div><!--flip card-->
+    </div>
+    <br/> 
+         
+        
+      
+        <div class="form-card" id="register-form">
+  
+     <!-- PERSOONLIJK -->
+          <div class="form-section">
+            <div class="form-section-title">👤 Persoonlijke gegevens <span>Verplicht</span></div>
+            <div class="form-grid">
+              <div class="form-field">
+                <label>Voornaam</label>
+                <input type="text" id="r-voornaam" placeholder="voornaam">
+              </div>
+              <div class="form-field">
+                <label>Achternaam</label>
+                <input type="text" id="r-achternaam" placeholder=" achternaam">
+              </div>
+              <div class="form-field">
+                <label>E-mailadres</label>
+                <input type="email" id="r-email" placeholder="name@gmail.com">
+              </div>
+              <div class="form-field">
+                <label>Telefoonnummer</label>
+                <input type="tel" id="r-telefoon" placeholder="+597 number">
+              </div>
+              <div class="form-field full">
+                <label>Korte introductie</label>
+             <textarea id="r-bio" data-countdown="true" rows="3" maxlength="250" placeholder="Vertel ouders iets over uzelf en uw ervaring…"></textarea>
+<div class="char-count"><span id="char-count">0</span>/250</div>
+            </div>
+            </div>
+          </div>
+
+          <!-- VOERTUIG -->
+          <div class="form-section">
+            <div class="form-section-title">🚌 Voertuig & capaciteit <span>Verplicht</span></div>
+            <div class="form-grid cols-3">
+              <div class="form-field">
+                <label>Type voertuig</label>
+                <select id="r-voertuig">
+                  <option>Minibus (6-9 pers.)</option>
+                  <option>Schoolbus (10-20 pers.)</option>
+                  <option>Grote bus (20+ pers.)</option>
+                  <option>Personenauto</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Max. capaciteit</label>
+                <input type="number" id="r-capaciteit" placeholder="8" min="1" max="50">
+              </div>
+              <div class="form-field">
+                <label>Ervaringsjaren</label>
+                <input type="number" id="r-ervaring" placeholder="0" min="0">
+              </div>
+              <div class="form-field">
+                <label>Kenteken</label>
+                <input type="text" id="r-kenteken" placeholder="AB-123-C">
+              </div>
+              
+              <div class="form-field">
+                <label>Extra's</label>
+                <select id="r-extra">
+                  <option>Geen</option>
+                  <option>Airco</option>
+                  <option>Rolstoeltoegankelijk</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- ROUTE -->
+          <div class="form-section">
+            <div class="form-section-title"> Route & school <span>Verplicht</span></div>
+            <div class="form-grid">
+              <div class="form-field">
+                <label>Wijk / route</label>
+                <select id="r-route">
+                  <option>Noord</option>
+                  <option>Zuid</option>
+                  <option>Oost</option>
+                  <option>West</option>
+                  
+                </select>
+              </div>
+              <div class="form-field"><!--hier moeten de school namen -->
+                <label>Aangesloten school</label>
+                <select id="r-school">
+                 <option value="" data-category="GLO">openbare scholen (O.S)</option><!--bij data-category plaats je bij welk value het behoord
+                    vb valye is daar GLO dus moet bij category="GLO" zijn-->
+                    <option value="" data-category="GLO">O.S Flora</option>
+                    <option data-category="GLO">O.S Welgelegen</option>
+                        <option data-category="GLO">O.S. Sophia's Lust.</option>
+               <option value="" data-category="VOJ"> havo</option><!-- do dezelfde van GLO hier bij VOJ--> <!--bij het maken van meer opties copy paste je gewoon een optie die je al daar ziet
+                    en maak je veranderingen erin-->
+                    <option value="" data-category="VOJ">imeao</option>
+                     <option value="" data-category="VOJ">VWO</option>
+   <option value="" data-category="HBO">UNASAT</option>
+                <option value=""data-category="HBO">anton de kom universiteit</option>
+                    </select>
+              </div>
+              <div class="form-field">
+                <label>Vertrektijd ochtend</label>
+                <input type="time" id="r-tijd-och" value="07:30">
+              </div>
+              <div class="form-field">
+                <label>Vertrektijd middag</label>
+                <input type="time" id="r-tijd-mid" value="14:45">
+              </div>
+            </div>
+
+            <hr/>
+            <div class="dagen">
+              <label class="dag">Beschikbare dagen</label>
+              <ul class="days-grid" id="days-grid">
+                <li class="day-toggle on" onclick="toggleDay(this)">Ma</li>
+                <li class="day-toggle on" onclick="toggleDay(this)">Di</li>
+                <li class="day-toggle on" onclick="toggleDay(this)">Wo</li>
+                <li class="day-toggle on" onclick="toggleDay(this)">Do</li>
+                <li class="day-toggle on" onclick="toggleDay(this)">Vr</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- TARIEF -->
+          <div class="form-section">
+            <div class="form-section-title"> Tarief</div>
+            <div class="form-grid cols-3">
+              <div class="form-field">
+                <label>Prijs per maand</label>
+                <input type="text" id="r-prijs">
+              </div>
+            
+              </div>
+              <div class="form-field">
+                <label>Inclusief terug?</label>
+                <select id="r-terug">
+                  <option>Heen & terug</option>
+                  <option>Alleen heen</option>
+                  <option>Alleen terug</option>
+                </select>
+              </div>
+               <div class="form-field">
+                <label>Profielfoto</label>
+                <input type="file" id="r-foto" accept="image/png, image/jpeg" onchange="handlePhotoPreview(this)" required>
+                <small>Upload een profielfoto zodat ouders u gemakkelijk herkennen.</small>
+                <div class="photo-preview" id="photo-preview" style="margin-top:0.75rem;display:none;">
+                  <img src="" alt="Profielfoto preview" style="max-width:120px;border-radius:16px;border:1px solid #dcd7ce;" />
+                </div>
+              </div>
+              <div class="form-field full">
+                <label class="checkbox-label"><input type="checkbox" id="r-show-contact"> Contactinformatie zichtbaar voor ouders</label>
+              </div>
+            </div>
+          </div>
+    </div>
+<br/>
+          <!-- AKKOORD -->
+          <div class="akkoord">
+            <input type="checkbox" id="r-akkoord" class="checkbox">
+            <label for="r-akkoord">Ik verklaar dat ik beschik over een geldig rijbewijs (D of B), een VOG, en dat alle opgegeven informatie correct is. Ik ga akkoord met de <u style="cursor:pointer;">gebruiksvoorwaarden</u> van BusConnect.</label>
+          </div>
+
+          <button class="btn btn-amber btn-full" onclick="submitRegistration()" style="font-size:1rem;padding:0.9rem;">
+            🚌 Registreer als chauffeur
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+        <div class="success-banner" id="success-banner">
+          <div class="success-icon">✅</div>
+          <div class="success-text">
+            <h4>Registratie gelukt!</h4>
+           <p> uw profile word aangemaakt zodra u gegevens zijn goed gekeurd  </p>
+          </div>
+        </div>
+  </div>
+  
+<div class="footer-note">
+  © 2026 BusConnect — Veilig schoolvervoer voor elk gezin 🚌
+</div>
+
+            
+
+<script src="js/function.js"></script>
+    
+    
+</body>
+</html>

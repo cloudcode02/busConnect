@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BusConnect — Schoolbus Diensten in Suriname</title>
+  <meta name="description" content="Verbindt ouders en schoolbuschauffeurs in Suriname. Vind betrouwbare chauffeurs met live tracking." />
+  <link rel="stylesheet" href="css/styles.css" />
+   <link rel="icon" title="image" href="img/bus.png"/>
+</head>
+<body>
+   
+        <div class="switch">
+        <a href="index1.html"><img src="IMG/light-bulb (1).png"class=" switch-off"/></a>
+       <a href="index.html"> <img src="IMG/lighting-bulb.png" class="switch-on"/></a>
+        </div>
+        
+  <!-- ─── Navigation ─── -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="html/index1.html" class="nav__logo">🚌 Bus<span>Connect</span></a>
+      <ul class="nav__links">
+        <li><a href="index1.html" class="active">Home</a></li>
+
+        <li><a href="contact1.html">Contact</a></li>
+        <li><a href="about1.html">Over Ons</a></li>
+        <li><a href="faq1.html">FAQ</a></li>
+        <li><a href="chauffeurs1.html" class="nav__cta">Registreer</a></li>
+      </ul>
+      <button class="nav__hamburger" id="hamburger" aria-label="Menu openen">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ─── Mobile Menu ─── -->
+  <div class="html/mobile-menu" id="mobileMenu">
+    <a href="index1.html">Home</a>
+    <a href="chauffeurs1.html">Chauffeurs</a>
+    <a href="contact1.html">Contact</a>
+    <a href="about1.html">Over Ons</a>
+    <a href="faq1.html">FAQ</a>
+    <a href="chauffeurs1.html" style="color:var(--accent)">Registreer</a>
+  </div>
+
+  <!-- ─── Hero ─── -->
+  <section class="hero">
+    <div class="hero__inner">
+      <div class="hero__text">
+        <span class="hero__label">🇸🇷 Suriname's #1 Schoolbus Platform</span>
+        <h1 class="hero__title">
+          Veilig en <em>betrouwbaar</em> schoolvervoer vinden
+        </h1>
+        <p class="hero__subtitle">
+          BusConnect verbindt ouders met gecertificeerde schoolbuschauffeurs in Suriname.
+          Volg de bus live, bekijk routes en neem direct contact op.
+        </p>
+        <div class="hero__actions">
+          <a href="chauffeurs1.html" class="btn btn--primary">🔍 Zoek een Chauffeur</a>
+          <a href="register.html" class="btn btn--outline">Registreer als Chauffeur</a>
+        </div>
+      </div>
+
+      <div class="hero__visual">
+        <!-- Live tracker mockup -->
+        <div class="hero__map-mock">
+          <div class="map-grid"></div>
+          <!-- Roads -->
+          <div class="map-road map-road--h" style="top:25%"></div>
+          <div class="map-road map-road--h" style="top:55%"></div>
+          <div class="map-road map-road--h" style="top:78%"></div>
+          <div class="map-road map-road--v" style="left:20%"></div>
+          <div class="map-road map-road--v" style="left:55%"></div>
+          <div class="map-road map-road--v" style="left:75%"></div>
+          <!-- Live bus -->
+          <div class="map-bus">🚌</div>
+          <!-- Location pins -->
+          <div class="map-pin" style="top:22%;left:17%"></div>
+          <div class="map-pin" style="top:50%;left:72%"></div>
+          <div class="map-pin" style="top:75%;left:18%"></div>
+          <!-- Status badge -->
+          <div class="map-badge">
+            <div class="map-badge__dot"></div>
+            <span>Bus rijdt — aankomst ~8 min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Stats Bar ─── -->
+  <section class="stats">
+    <div class="container">
+      <div class="stats__inner">
+        <div class="stat">
+          <div class="stat__number">120+</div>
+          <div class="stat__label">Geregistreerde Chauffeurs</div>
+        </div>
+        <div class="stat">
+          <div class="stat__number">850+</div>
+          <div class="stat__label">Tevreden Ouders</div>
+        </div>
+        <div class="stat">
+          <div class="stat__number">40+</div>
+          <div class="stat__label">Actieve Routes</div>
+        </div>
+        <div class="stat">
+          <div class="stat__number">98%</div>
+          <div class="stat__label">Stiptheid</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Features ─── -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="section-label">Waarom BusConnect</span>
+        <h2>Alles wat ouders nodig hebben</h2>
+        <p>Van zoeken tot live volgen — alles op één plek.</p>
+      </div>
+      <div class="grid-3">
+        <div class="feature-card">
+          <div class="feature-card__icon">📍</div>
+          <h3>Live GPS Tracker</h3>
+          <p>Volg de schoolbus in real-time via Google Maps. U weet altijd precies waar de bus is en wanneer hij aankomt.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">👤</div>
+          <h3>Geverifieerde Profielen</h3>
+          <p>Elke chauffeur heeft een volledig profiel met foto, rijbewijs, routes en werkervaring. Volledig transparant.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">🔔</div>
+          <h3>Slimme Meldingen</h3>
+          <p>Ontvang automatisch een e-mailmelding wanneer de bus bij u in de buurt is en wanneer het kind op school aankomt.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">🔍</div>
+          <h3>Zoeken op Route</h3>
+          <p>Filter chauffeurs op uw wijk, route of schoollocatie. Vind snel de beste optie in uw buurt.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">💬</div>
+          <h3>Direct Contact</h3>
+          <p>Neem rechtstreeks contact op met de chauffeur via het platform. Geen tussenpersonen, geen gedoe.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">🛡️</div>
+          <h3>Veilige Opslag</h3>
+          <p>Alle persoonlijke gegevens worden veilig opgeslagen in onze SQL-database. Uw privacy staat voorop.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── How It Works ─── -->
+  <section class="section how-it-works">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="section-label">Hoe het werkt</span>
+        <h2>In 4 stappen geregeld</h2>
+        <p>Snel een betrouwbare schoolbus vinden was nog nooit zo eenvoudig.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step__number">1</div>
+          <h3>Zoek een Chauffeur</h3>
+          <p>Zoek op uw wijk of route. Bekijk profielen zonder account.</p>
+        </div>
+        <div class="step">
+          <div class="step__number">2</div>
+          <h3>Vergelijk & Kies</h3>
+          <p>Bekijk beoordelingen, routes, ervaring en beschikbaarheid.</p>
+        </div>
+        <div class="step">
+          <div class="step__number">3</div>
+          <h3>Neem Contact Op</h3>
+          <p>Stuur een aanvraag. Ontvang bevestiging per e-mail.</p>
+        </div>
+        <div class="step">
+          <div class="step__number">4</div>
+          <h3>Volg Live</h3>
+          <p>Activeer de GPS tracker en volg de bus in real-time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Featured Drivers Preview ─── -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header" style="display:flex;justify-content:space-between;align-items:flex-end;">
+        <div>
+          <span class="section-label">Chauffeurs</span>
+          <h2>Uitgelichte Chauffeurs</h2>
+        </div>
+        <a href="html/chauffeurs.html" class="btn btn--outline btn--sm">Alle Chauffeurs →</a>
+      </div>
+      <div class="grid-3" id="featuredDrivers">
+        <!-- Loaded dynamically via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA Banner ─── -->
+  <section class="section--sm" style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <div class="container" style="text-align:center;max-width:600px;">
+      <span class="section-label">Bent u een chauffeur?</span>
+      <h2 style="margin-bottom:0.75rem;">Vergroot uw bereik met BusConnect</h2>
+      <p style="margin-bottom:2rem;">Maak gratis een profiel aan en bereik honderden ouders in Suriname die op zoek zijn naar betrouwbaar schoolvervoer.</p>
+      <a href="html/register.html" class="btn btn--primary">Gratis Registreren</a>
+    </div>
+  </section>
+
+  <!-- ─── Footer ─── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <div class="nav__logo" style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;">🚌 Bus<span style="color:var(--accent)">Connect</span></div>
+          <p>Het centrale platform voor schoolbus diensten in Suriname. Veilig, overzichtelijk en betrouwbaar.</p>
+        </div>
+        <div class="footer__col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="html/chauffeurs.html">Chauffeurs</a></li>
+            <li><a href="html/register.html">Registreren</a></li>
+            <li><a href="html/login.html">Inloggen</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Informatie</h4>
+          <ul>
+            <li><a href="html/about.html">Over Ons</a></li>
+            <li><a href="html/faq.html">FAQ</a></li>
+            <li><a href="html/contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Groep</h4>
+          <ul>
+            <li><a href="#">The Element 3</a></li>
+            <li><a href="#">Adis Uni</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 BusConnect — The Element 3</span>
+        <span>Gemaakt voor Suriname 🇸🇷</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="function.js"></script>
+</body>
+</html>

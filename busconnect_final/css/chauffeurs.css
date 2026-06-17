@@ -1,0 +1,510 @@
+*{
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+    /*stuff that comes here meaning it applied to the whole thing so dont add stuff in this style if u know u have to change it eventually somewhere else. it wont work */
+
+:root {
+  --white: #ffffff;
+  --ink: #1c1a17;
+  --ink-light: #5a5449;
+  --border: #e2e0db;
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+html{
+  
+    font-size: 20px;
+    scroll-behavior: smooth;
+    background-color: rgb(255, 235, 205, 0.4);
+    z-index: -99;
+    height: 100dvh;
+    
+    
+}
+.page {
+    display: block; /*dont put none or else the page wont show*/
+    animation: fadeIn 2s ease-in;
+}
+.page.active.active { 
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0; 
+        transform: translateY(8px);
+    }
+    to{
+        opacity: 1; 
+        transform: translateY(0);
+    }
+}
+/*this is how you want your page to apear when you click on it*/
+/*code switched on*/
+.header {
+  margin-top: -1%;
+    max-height:660rem;
+    height: 250px;
+    position: absolute;
+    background-image:linear-gradient(to bottom, rgb(245, 225, 51), rgb(236, 230, 171));
+    z-index: -1;
+    width:100%;
+    opacity:0.5; /*opacity makes the background lighter or bold. u can put it at the color itself but also seperately*/
+    background-size: cover;
+    display: block;
+    
+    mask: 
+    radial-gradient(30px at 75% 100%, #0000 98%, #000) 50% calc(100% - 30px) / 120px 100% repeat-x,
+    radial-gradient(30px at 25% 100%, #000 98%, #0000 100%) 50% 100% / 120px 100% repeat-x;
+  
+  /* Standard prefixed version for better browser compatibility */
+  -webkit-mask: 
+    radial-gradient(30px at 75% 100%, #0000 98%, #000) 50% calc(100% - 30px) / 120px 100% repeat-x,
+    radial-gradient(30px at 25% 100%, #000 98%, #0000 100%) 50% 100% / 120px 100% repeat-x;
+
+    mask: radial-gradient(30px at 75% 100%, #0000 98%, #000) calc(50% + 60px) calc( 100% - 30px )/ 120px 90% repeat-x,
+    radial-gradient(30px at 25% 50%, #000 99%, #0000 101%) calc(50% + 60px) 100%/ 120px 60% repeat-x,
+
+}
+.container-hero{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    margin-top: 10px;  
+  
+}
+.hero-tag{
+    display: flex;
+    font-weight: 100; /*is the thicknes of the text*/
+    position: absolute;
+      text-transform: uppercase;
+    font-size: 15px;
+
+}
+.container-hero h1{
+    line-height: 1.5;
+    width: 350px;
+    display: inline-block;
+    text-align: center;
+    font-size: 25px;
+    border-radius:5px;
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.15);
+
+    
+}
+.container{
+  margin-top: 10rem;
+  display: flex;
+  
+}
+.register-layout {
+  display: flex;
+flex-direction: column;
+  gap: 2.5rem;
+  align-items: start;
+  justify-content: center;
+}
+   .arrow {
+    width:34px;
+    height:24px;
+    
+   }
+/*till here is correct*/
+.flip-card{
+  position: sticky;
+  display:block;
+  padding:  4px;
+  border-radius: 20px;
+  background-color:transparent;
+  margin:85px auto;
+  margin-left: 19px;
+  width: 50vw;
+  height: 425px;
+  max-width:350px;
+  aspect-ratio:9/16; /*aspect-ratio is the same like when u post video and theyll ask you if you want it 1.1, 9.16 screen */
+  perspective: 1000px; /*dont touch or else the element will leak */
+
+}
+.flip-card-inner{
+                 position:relative; 
+                 width: 100%;
+                  height: 100%;
+                    transition: transform 0.6s;
+                     transform-style: preserve-3d;
+                    cursor: pointer;
+                 }
+.flip-card-inner.is-flipped{ /*this trigger the position of your card*/
+  transform: rotateY(180deg);
+}
+.flip-card-front, 
+.flip-card-back{
+  position: absolute;
+  width: 100%;
+  height:100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 20px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items: center;
+  padding:20px;
+  box-sizing: border-box;
+
+}
+.flip-card-back {
+ color:#000;
+ background-color: rgb(241, 231, 183, 0.4);
+           border-radius: 20px; 
+           
+           transform: rotateY(180deg);
+            justify-content: flex-start;
+              }
+                  .flip-card-front{
+              background-size: cover;
+              background-position: center;
+              background-color: rgb(46, 38, 46);
+         width: 50vw;
+          height: 425px;
+          max-width: 350px;
+          color: #fff;
+          justify-content: center;
+             }
+             
+.button{
+  border-radius: 20px;
+  padding:20px;
+  cursor: pointer;
+}
+.button:hover{
+  background-color: #f1c577;
+}
+.sidebar-card h3 {
+  font-size: 1.35rem;
+  margin-bottom: 0.75rem;
+
+  
+}
+
+.sidebar-card p {
+  font-size: 0.875rem;
+  color: black;
+  line-height: 1.7;
+}
+
+.sidebar-steps {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  
+}
+
+.step-item {
+  display: flex;
+  gap: 0.75rem;
+  
+
+}
+
+.step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgb(235, 225, 138);
+  color: black;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items:center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.step-text {
+  font-size: 0.85rem;
+  color: rgb(41, 44, 41);
+  line-height: 1.5;
+}
+
+.step-text strong { color: black; display: block; }
+
+.form-card { 
+  border: 1px solid grey;
+  border-radius: 16px;
+  padding: 2rem;
+background-color: #eed5aa;
+border-radius: 20px;
+  width: 100vw;
+  
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-field textarea {
+  padding: 0.7rem 0.95rem;
+  
+  border-radius: 8px;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 0.875rem;
+  color: black;
+  background: white;
+  transition: border-color 0.15s, background 0.15s;
+  outline: none;
+  resize: vertical;
+}
+
+
+.form-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid gray;
+}
+
+.form-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.form-section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: black;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.form-section-title span {
+  background: rgb(241, 12, 23, 0.5);
+  color: rgb(49, 46, 46);
+  font-size: 0.75rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 99px;
+  font-family: 'Instrument Sans', sans-serif;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.form-grid.cols-1 { grid-template-columns: 1fr; }
+.form-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+select, input{
+  border-radius: 20px;
+}
+
+textarea{
+  border-radius: 5px;
+}
+/*days*/
+
+ul{
+  list-style-type: none;
+  display: flex;
+  gap: 0.4rem;
+}
+.dagen{
+  margin-top:1rem;
+}
+.dag{
+  margin-top: 10px;
+  font-weight:600;
+  display:block;
+  margin-bottom: 0.6rem;
+
+}
+
+.day-toggle {
+  padding: 0.6rem 0.4rem;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: black;
+  background: rgb(241, 202, 93);
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.day-toggle.on {
+  
+  background: rgb(197, 165, 97);
+  color: white;
+}
+
+.char-count {
+  font-size: 0.75rem;
+  color: rgb(212, 204, 154);
+  text-align: right;
+}
+.akkoord{
+margin-left: auto;
+gap:0.75rem;
+padding:1rem;
+background: rgb(236, 216, 193, 0.5);
+border-radius:10px;
+margin-bottom:1.5rem;
+font-size:0.85rem;
+color:black;
+}
+.checkbox{
+  
+  width:16px;
+  height:16px;
+  accent-color: rgb(240, 236, 204);
+  flex-shrink:0;
+}
+
+/* ── SUCCESS ── */
+.success-banner {
+  display: none;
+  background: rgb(244, 247, 209);
+  border: 1px solid #A8D5B8;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.success-banner.show { display: flex; }
+.success-icon { font-size: 1.5rem; }
+.success-text h4 { color: rgb(170, 243, 170); font-size: 1rem; margin-bottom: 0.3rem; }
+.success-text p { color: #3D6B4F; font-size: 0.875rem; }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: white;
+}
+
+.empty-state .emoji { font-size: 3rem; display: block; margin-bottom: 1rem; }
+.empty-state h3 { font-family: 'Fraunces', serif; font-size: 1.3rem; margin-bottom: 0.5rem; color: rgb(236, 228, 218); }
+
+/* ── FOOTER NOTE ── */
+.footer-note {
+  text-align: center;
+  padding: 2rem;
+  
+  font-size: 0.82rem;
+  
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+/*driver*/
+.drivers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.driver-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.driver-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--amber);
+}
+
+.driver-card-top {
+  background: var(--ink);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.driver-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--amber);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--ink);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.driver-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.driver-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.driver-since {
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  margin-top: 0.1rem;
+}
+
+.badge-row {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  letter-spacing: 0.03em;
+}
+
+.badge-green { background: var(--green-light); color: var(--green); }
+.badge-amber { background: var(--amber-light); color: var(--amber-dark); }
+.badge-gray  { background: #F0EDE8; color: var(--ink-light); }
+
+.driver-card-body {
+  padding: 1.25rem 1.5rem;
+}
+
+.driver-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+}
+

@@ -1,0 +1,164 @@
+.container-hero{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    margin-top: 10px;
+    
+    
+
+}
+.hero-tag{
+    display: flex;
+    font-weight: 100; /*is the thicknes of the text*/
+    position: absolute;
+      text-transform: uppercase;
+    
+    font-size: 15px;
+
+}
+.container-hero h1{
+    line-height: 1.5;
+    width: 350px;
+    display: inline-block;
+    text-align: center;
+    font-size: 25px;
+    
+    
+}
+p{
+    justify-content: center;
+    background-color: rgb(75, 66, 66, 0.5);
+    color: white;
+    font-size: 12px;
+    border-radius:20px;
+    padding:10px;
+}
+.page {
+    display: block; /*dont put none or else the page wont show*/
+    animation: fadeIn 2s ease-in;
+}
+.page.active.active { 
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0; trandform: translateY(8px);
+    }
+    to{
+        opicity: 1; transform: translateY(0);
+    }
+}
+/*this is how you want your page to apear when you click on it*/
+/*code switched on*/
+.logo {
+    display: inline-flex;
+    position: relative; 
+    height: 200px;
+    width: 200px;
+    margin-left: 50px;
+    border-radius: 20px;
+}
+
+.filter-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 0.5rem;/*when the space gets smaller the grit changes accordingly to the minmax px, and how many colums 
+    you want is given in fr*/
+    align-items: end;
+}
+.filter-bar { /*the big bar where you see filter uw wensen */
+    background:#f1ead3;
+    border: 1px solid #ecf5e7;
+    border-radius: 16px;
+        box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.15);
+    padding: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+
+    
+
+}
+.field label{ /*this is the labels you see on top*/
+    display: grid;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #3c4438;
+    margin-bottom: 0.4rem;
+    
+    
+}
+.field input, .field select{
+    width: 100%; /*breedte van het selectie button*/
+    padding: 0.65rem 0.9rem;
+    border: 1.5px solid grey;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #3c4438;
+    background: rgb(116, 114, 114, 0.5);
+    transition: border-color 0.15s;
+    outline: none;
+}
+
+.btn {
+    display: inline-block;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-decoration: none;
+}
+.filter-btn, .btn-primary{
+    display: inline-flex;
+    font-size: 0.875rem;  
+    gap: 4rem;
+    width:150px;
+    align-items: flex-end;
+    background: rgb(70, 58, 58, 0.1) ;
+}
+.filter-btn:hover, .btn-primary:hover{
+    padding: 0.65rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    background: #1d1f1b;
+    color: #fff;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+
+
+
+.container{
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+.section-header{
+    margin-bottom: 2rem;
+    margin-top: 4rem;
+}
+
+.section-header h2{
+    font-size: 1.9rem;
+    color: #1d1f1b;
+    margin-bottom: 0.4rem;
+}
+
+.section-header p {
+    color: #1d1f1b;
+}
+.count{
+    font-size:1rem;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+font-weight: 400;
+color:#1d1f1b;
+}

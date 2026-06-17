@@ -1,0 +1,189 @@
+ <!-- PERSOONLIJK -->
+          <div class="form-section">
+            <div class="form-section-title">👤 Persoonlijke gegevens <span>Verplicht</span></div>
+            <div class="form-grid">
+              <div class="form-field">
+                <label>Voornaam</label>
+                <input type="text" id="r-voornaam" placeholder="voornaam">
+              </div>
+              <div class="form-field">
+                <label>Achternaam</label>
+                <input type="text" id="r-achternaam" placeholder=" achternaam">
+              </div>
+              <div class="form-field">
+                <label>E-mailadres</label>
+                <input type="email" id="r-email" placeholder="name@gmail.com">
+              </div>
+              <div class="form-field">
+                <label>Telefoonnummer</label>
+                <input type="tel" id="r-telefoon" placeholder="+597 number">
+              </div>
+              <div class="form-field full">
+                <label>Korte introductie</label>
+               <div id="r-bio">
+  <!-- JavaScript targets 'myTextarea' safely here -->
+  <textarea id="myTextarea" rows="3" maxlength="250" placeholder="geef een korte introductie"></textarea>
+</div>
+
+<!-- The span below will update dynamically without duplicating the '/250' text -->
+<div class="char-count"><span id="charCount">0</span>/250</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- VOERTUIG -->
+          <div class="form-section">
+            <div class="form-section-title">🚌 Voertuig & capaciteit <span>Verplicht</span></div>
+            <div class="form-grid cols-3">
+              <div class="form-field">
+                <label>Type voertuig</label>
+                <select id="r-voertuig">
+                  <option>Minibus (6-9 pers.)</option>
+                  <option>Schoolbus (10-20 pers.)</option>
+                  <option>Grote bus (20+ pers.)</option>
+                  <option>Personenauto</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Max. capaciteit</label>
+                <input type="number" id="r-capaciteit" placeholder="8" min="1" max="50">
+              </div>
+              <div class="form-field">
+                <label>Ervaringsjaren</label>
+                <input type="number" id="r-ervaring" placeholder="0" min="0">
+              </div>
+              <div class="form-field">
+                <label>Kenteken</label>
+                <input type="text" id="r-kenteken" placeholder="AB-123-C">
+              </div>
+              
+              <div class="form-field">
+                <label>Extra's</label>
+                <select id="r-extra">
+                  <option>Geen</option>
+                  <option>Airco</option>
+                  <option>Rolstoeltoegankelijk</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- ROUTE -->
+          <div class="form-section">
+            <div class="form-section-title"> Route & school <span>Verplicht</span></div>
+            <div class="form-grid">
+              <div class="form-field">
+                <label>Wijk / route</label>
+                <select id="r-route">
+                  <option>Noord</option>
+                  <option>Zuid</option>
+                  <option>Oost</option>
+                  <option>West</option>
+                  
+                </select>
+              </div>
+              <div class="form-field"><!--hier moeten de school namen -->
+                <label>Aangesloten school</label>
+                <select id="r-school">
+                 <option value="" data-category="GLO">openbare scholen (O.S)</option><!--bij data-category plaats je bij welk value het behoord
+                    vb valye is daar GLO dus moet bij category="GLO" zijn-->
+                    <option value="" data-category="GLO">O.S Flora</option>
+                    <option data-category="GLO">O.S Welgelegen</option>
+                        <option data-category="GLO">O.S. Sophia's Lust.</option>
+               <option value="" data-category="VOJ"> havo</option><!-- do dezelfde van GLO hier bij VOJ--> <!--bij het maken van meer opties copy paste je gewoon een optie die je al daar ziet
+                    en maak je veranderingen erin-->
+                    <option value="" data-category="VOJ">imeao</option>
+                     <option value="" data-category="VOJ">VWO</option>
+   <option value="" data-category="HBO">UNASAT</option>
+                <option value=""data-category="HBO">anton de kom universiteit</option>
+                    </select>
+              </div>
+              <div class="form-field">
+                <label>Vertrektijd ochtend</label>
+                <input type="time" id="r-tijd-och" value="07:30">
+              </div>
+              <div class="form-field">
+                <label>Vertrektijd middag</label>
+                <input type="time" id="r-tijd-mid" value="14:45">
+              </div>
+            </div>
+
+            <hr/>
+              <label class="dag">Beschikbare dagen</label>
+               
+              <ul class="days-grid" id="days-grid">
+                <li class="day-toggle on" onclick="toggleDay(this)">Ma</li>
+                <li class="day-toggle on" onclick="toggleDay(this)">Di</li>
+                <li class="day-toggle on" onclick="toggleDay(this)">Wo</li>
+                <li class="day-toggle on" onclick="toggleDay(this)">Do</li>
+                <li class="day-toggle on" onclick="toggleDay(this)">Vr</li>
+              </ul>
+            
+          </div>
+
+          <!-- TARIEF -->
+          <div class="form-section">
+            <div class="form-section-title"> Tarief</div>
+            <div class="form-grid cols-3">
+              <div class="form-field">
+                <label>Prijs per maand</label>
+                <input type="text" id="r-prijs">
+              </div>
+            
+              </div>
+              <div class="form-field">
+                <label>Inclusief terug?</label>
+                <select id="r-terug">
+                  <option>Heen & terug</option>
+                  <option>Alleen heen</option>
+                  <option>Alleen terug</option>
+                </select>
+              </div>
+            </div>
+          </div>
+    </div>
+<br/>
+          <!-- AKKOORD -->
+          <div class="akkoord">
+            <input type="checkbox" id="r-akkoord" class="checkbox">
+            <label for="r-akkoord">Ik verklaar dat ik beschik over een geldig rijbewijs (D of B), een VOG, en dat alle opgegeven informatie correct is. Ik ga akkoord met de <u style="cursor:pointer;">gebruiksvoorwaarden</u> van BusConnect.</label>
+          </div>
+
+          <button class="btn btn-amber btn-full" onclick="submitRegistration()" style="font-size:1rem;padding:0.9rem;">
+            🚌 Registreer als chauffeur
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-title">Chauffeursprofiel</h2>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+  <div>
+        <div class="success-banner" id="success-banner">
+          <div class="success-icon">✅</div>
+          <div class="success-text">
+            <h4>Registratie gelukt!</h4>
+           <p> uw profile word aangemaakt zodra u gegevens zijn goed gekeurd  </p>
+          </div>
+        </div>
+  </div>
+  
+<div class="footer-note">
+  © 2026 BusConnect — Veilig schoolvervoer voor elk gezin 🚌
+</div>
+const count = drivers.length + registeredDrivers.length;
+  document.getElementById('stat-drivers').textContent = count;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
